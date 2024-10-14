@@ -1,47 +1,43 @@
 import datetime
 
-from dagster import asset, op, OpExecutionContext, RetryPolicy, graph_asset, AssetExecutionContext, In, Nothing
+from dagster import asset, op, OpExecutionContext, RetryPolicy, graph_asset, AssetExecutionContext, In, Nothing, asset_check, AssetCheckResult, AssetCheckSeverity, AssetCheckExecutionContext
 
 
-@op(retry_policy=RetryPolicy(max_retries=3), required_resource_keys={"snowflake"}, ins={"start": In(Nothing)})
+@op(retry_policy=RetryPolicy(max_retries=3), required_resource_keys={"snowflake", "env_config"}, ins={"start": In(Nothing)})
 def create_events_table(context: OpExecutionContext) -> str:
-    """Generates the events_table using csv files from platform_transactions in S3"""
-    database = "PLATFORM_DEV"
-    table_name = "events"
-    datatypes = {
-        "transaction_id": "INT",
-        "purchase_price": "FLOAT",
-        "product_value": "FLOAT",
-        "product_name": "VARCHAR(255)",
-        "first_name": "VARCHAR(255)",
-        "last_name": "VARCHAR(255)",
-        "email": "VARCHAR(255)",
-        "gender": "VARCHAR(255)",
-        "customer_country": "VARCHAR(255)",
-        "client_country": "VARCHAR(255)",
-    }
+    """Generates the events table using csv files from platform_transactions in S3"""
+    env_config = context.resources.env_config
+    database = env_config.snowflake_database
+    table_name = env_config.snowflake_table_name
+    schema = env_config.snowflake_schema
+    datatypes = env_config.datatypes
     column_definition = ",\n".join(
         f"{column_name} {column_type}" for column_name, column_type in datatypes.items()
     )
 
-    create_table_sql = f'CREATE TABLE IF NOT EXISTS "{database}"."RAW".{table_name} ({column_definition})'
+    create_table_sql = f'CREATE TABLE IF NOT EXISTS "{database}"."{schema}".{table_name} ({column_definition})'
     context.resources.snowflake.execute_query(create_table_sql)
     context.log.info("Table created successfully.")
     return table_name
 
 
-@op(retry_policy=RetryPolicy(max_retries=3), required_resource_keys={"snowflake"})
+@op(retry_policy=RetryPolicy(max_retries=3), required_resource_keys={"snowflake", "env_config"})
 def create_s3_file_stage(context: OpExecutionContext, table_name: str) -> str:
     """Creates a Snowflake Stage object using the S3 platform_transactions file"""
-    bucket_name = "ae-exam-bucket-dev"
+    env_config = context.resources.env_config
+    schema = env_config.snowflake_schema
+    database = env_config.snowflake_database
+    stage = f"{env_config.snowflake_table_name}_stage"
+    bucket_name = env_config.bucket_name
     date = datetime.datetime.now().strftime("%Y-%m-%d")
-    database = "PLATFORM_DEV"
-    stage = f"{table_name}_stage"
-    s3_path = f"s3://{bucket_name}/data/{date}/"
+    data_folder = env_config.data_folder
+    s3_path = f"s3://{bucket_name}/{data_folder}/{date}/"
 
-    query = f"""CREATE OR REPLACE STAGE "{database}"."RAW".{stage}
-    URL='{s3_path}'
-    CREDENTIALS=(AWS_KEY_ID='<AWS_KEY_ID_HERE>' AWS_SECRET_KEY='<AWS_SECRET_KEY_HERE>');"""
+    query = f"""
+        CREATE OR REPLACE STAGE "{database}"."{schema}".{stage}
+        URL='{s3_path}'
+        CREDENTIALS=(AWS_KEY_ID='{env_config.aws_key_id}' AWS_SECRET_KEY='{env_config.aws_secret_key}');
+    """
     context.resources.snowflake.execute_query(query)
     context.log.info("Stage created successfully.")
     return s3_path
@@ -55,22 +51,20 @@ def s3_csv_snowflake_stage() -> None:
     return s3_path
 
 
-@asset(deps=[s3_csv_snowflake_stage], required_resource_keys={"snowflake"})
+@asset(deps=[s3_csv_snowflake_stage], required_resource_keys={"snowflake", "env_config"})
 def events_table(context: AssetExecutionContext) -> None:
     """Creates the events table using the platform_transactions.csv via Snowflake Stage"""
-    database = "PLATFORM_DEV"
-    table_name = "events"
-    stage = "events_stage"
+    env_config = context.resources.env_config
+    database = env_config.snowflake_database
+    table_name = env_config.snowflake_table_name
+    schema = env_config.snowflake_schema
+    stage = f"{env_config.snowflake_table_name}_stage"
+
     query = f"""
-    COPY INTO "{database}".RAW.{table_name}
-    FROM @"{database}".RAW.{stage}
-    FILE_FORMAT = (TYPE = 'CSV' SKIP_HEADER = 1);
+        COPY INTO "{database}".{schema}.{table_name}
+        FROM @"{database}".{schema}.{stage}
+        FILE_FORMAT = (TYPE = 'CSV' SKIP_HEADER = 1);
     """
     context.resources.snowflake.execute_query(query)
     context.log.info("File in Stage was Loaded Successfully.")
     return
-
-
-@asset(deps=[events_table])
-def just_another_asset() -> str:
-    return "Hello World"

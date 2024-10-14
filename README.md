@@ -40,6 +40,7 @@ Before doing anything else, in `config.py`, rename the `folder_alias` variable t
 # 5. Create a terraform cloud account
 # 6. In terraform cloud, create an Organization Token and save it in the .env file
 # User must create a terraform access token
+# User must upload the csv file into s3 
 # User must also configure the AWS Credentials in Terraform
 # S3 Buckets are currently publicly accessible - it can be made private later
 # REPORT SQL Queries are incorrect - no group by and date range is out of bounds (start > end)

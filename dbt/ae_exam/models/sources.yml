@@ -4,6 +4,5 @@ sources:
   - name: ae_exam
     schema: raw
     tables:
-      - name: raw_events
-        identifier: events
+      - name: events
 

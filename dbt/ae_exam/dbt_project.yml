@@ -32,7 +32,7 @@ clean-targets:         # directories to be removed by `dbt clean`
 models:
   ae_exam:
     raw:
-      +materialized: ephemeral
+      +materialized: view
       +schema: RAW
     dim:
       +materialized: table

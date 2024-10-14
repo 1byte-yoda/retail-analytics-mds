@@ -1,6 +1,6 @@
 WITH _raw_events AS (
     SELECT *
-    FROM {{ source("ae_exam", "raw_events") }}
+    FROM {{ source("ae_exam", "events") }}
 )
 
 SELECT *

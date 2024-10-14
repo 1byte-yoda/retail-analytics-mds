@@ -1,0 +1,9 @@
+version: 2
+
+models:
+  - name: fact_events
+    columns:
+      - name: transaction_id
+        tests:
+          - unique
+          - not_null

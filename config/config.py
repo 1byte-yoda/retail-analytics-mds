@@ -7,7 +7,7 @@ user = "analytics"
 bucket_name = "test-ae-exam-public"
 reports_folder = "reports"
 data_folder = "data"
-folder_alias = "TESTING"
+folder_alias = "CANEDA_MR"
 
 datatypes = {
     "transaction_id": "INT",

@@ -33,5 +33,11 @@ models:
   ae_exam:
     raw:
       +materialized: ephemeral
-      schema: RAW
+      +schema: RAW
+    dim:
+      +materialized: table
+      +schema: DIM
+    fact:
+      +materialized: table
+      +schema: FACT
 

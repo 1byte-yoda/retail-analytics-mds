@@ -40,4 +40,7 @@ models:
     fact:
       +materialized: table
       +schema: FACT
+    report:
+      +materialized: table
+      +schema: REPORT
 

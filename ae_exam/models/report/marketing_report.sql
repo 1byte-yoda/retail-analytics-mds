@@ -1,7 +1,7 @@
 WITH _marketing_report AS (
     SELECT fe.transaction_id,
            dc.customer_country,
-           CURRENT_DATE() AS transaction_date
+           transaction_date
     FROM {{ ref("fact_events") }} AS fe
     JOIN {{ ref("dim_customers") }} AS dc ON dc.id = fe.customer_id
 )

@@ -23,6 +23,7 @@ snowflake_io_manager = SnowflakeResource(
     database=env_config.snowflake_database,
     schema=env_config.snowflake_schema,
     warehouse=env_config.snowflake_wh,
+    role=env_config.snowflake_role
 )
 
 dbt_dev_resource = DbtCliResource(

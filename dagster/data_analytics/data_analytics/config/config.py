@@ -34,6 +34,7 @@ class ProdConfig(BaseConfig):
     bucket_name = "ae-exam-bucket-prod"
     aws_key_id = os.environ.get("AWS_KEY_ID")
     aws_secret_key = os.environ.get("AWS_SECRET_KEY")
+    snowflake_role = "TRANSFORM_PROD"
 
 
 class StageConfig(BaseConfig):
@@ -46,6 +47,7 @@ class StageConfig(BaseConfig):
     bucket_name = "ae-exam-bucket-stage"
     aws_key_id = os.environ.get("AWS_KEY_ID")
     aws_secret_key = os.environ.get("AWS_SECRET_KEY")
+    snowflake_role = "TRANSFORM_STAGE"
 
 
 class DevConfig(BaseConfig):
@@ -58,6 +60,7 @@ class DevConfig(BaseConfig):
     bucket_name = "ae-exam-bucket-dev"
     aws_key_id = os.environ.get("AWS_KEY_ID")
     aws_secret_key = os.environ.get("AWS_SECRET_KEY")
+    snowflake_role = "TRANSFORM_DEV"
 
 
 ENV_CONFIGS = {

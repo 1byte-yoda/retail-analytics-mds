@@ -53,12 +53,12 @@ def finance_report_file(context: AssetExecutionContext) -> None :
     today = datetime.datetime.now().strftime("%Y-%m-%d")
 
     query = f"""
-        COPY INTO @"{database}"."{schema}".report_stage/finance_report_{today}"
+        COPY INTO @"{database}"."{schema}".report_stage/finance_report_{today}
         FROM "{database}".{schema}.{table_name}
-        OVERWRITE = TRUE
+        OVERWRITE = TRUE HEADER = TRUE
     """
     context.resources.snowflake.execute_query(query)
-    context.log.info("Report File Unloaded Successfully")
+    context.log.info("Finance Report File Unloaded Successfully")
 
 
 @asset(deps=["s3_file_report_stage"], required_resource_keys={"snowflake", "env_config"})
@@ -72,7 +72,7 @@ def marketing_report_file(context: AssetExecutionContext) -> None :
     query = f"""
         COPY INTO @"{database}"."{schema}".report_stage/marketing_report_{today}
         FROM "{database}".{schema}.{table_name}
-        OVERWRITE = TRUE
+        OVERWRITE = TRUE HEADER = TRUE
     """
     context.resources.snowflake.execute_query(query)
-    context.log.info("Report File Unloaded Successfully")
+    context.log.info("Marketing Report File Unloaded Successfully")

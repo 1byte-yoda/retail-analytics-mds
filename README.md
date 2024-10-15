@@ -1,5 +1,7 @@
-[![codecov](https://codecov.io/github/codecov/ae-tech-assessment/branch/master/graph/badge.svg?token=tkq655ROg3)](https://app.codecov.io/github/codecov/ae-tech-assessment)
+[![BuildStatus](https://github.com/1byte-yoda/ae-tech-assessment/actions/workflows/cicd.yml/badge.svg)](https://github.com/1byte-yoda/ae-tech-assessment)
 [![codecov][code-cov-shield]][code-cov-url]
+[![linter](https://img.shields.io/badge/linter-flake8-blue)](https://github.com/PyCQA/flake8)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 You just started working for a company that sells products for a couple of countries in the world.
 

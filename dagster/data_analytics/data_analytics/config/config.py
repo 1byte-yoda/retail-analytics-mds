@@ -33,12 +33,9 @@ class BaseConfig:
         else:
             region_name = "ap-southeast-2"
             session = boto3.session.Session()
-            client = session.client(
-                service_name='secretsmanager',
-                region_name=region_name
-            )
+            client = session.client(service_name="secretsmanager", region_name=region_name)
             response = client.get_secret_value(
-                SecretId=f'ae_exam_secrets_{env}',
+                SecretId=f"ae_exam_secrets_{env}",
             )
             return json.loads(response["SecretString"])
 
@@ -97,8 +94,4 @@ class DevConfig(BaseConfig):
         self.dagster_webserver_url = "http://127.0.0.1:3000/"
 
 
-ENV_CONFIGS = {
-    "dev": DevConfig(),
-    "stage": StageConfig(),
-    "prod": ProdConfig()
-}
+ENV_CONFIGS = {"dev": DevConfig(), "stage": StageConfig(), "prod": ProdConfig()}

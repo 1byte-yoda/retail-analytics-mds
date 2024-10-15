@@ -1,5 +1,4 @@
 import os
-from unittest.mock import MagicMock
 
 import pytest
 from dagster import build_op_context, build_asset_context
@@ -30,7 +29,7 @@ def fake_resources():
         database=env_config.snowflake_database,
         schema=env_config.snowflake_schema,
         warehouse=env_config.snowflake_wh,
-        role=env_config.snowflake_role
+        role=env_config.snowflake_role,
     )
     yield {"env_config": env_config, "snowflake": snowflake, "dbt": dbt_dev_resource}
 

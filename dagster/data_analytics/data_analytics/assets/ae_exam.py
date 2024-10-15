@@ -1,11 +1,10 @@
 import datetime
-from typing import Mapping, Any, Union
+from typing import Mapping, Any
 
-from dagster import AssetKey, AssetExecutionContext, asset_check, AssetCheckExecutionContext, AssetCheckResult, AssetCheckSeverity, op
-from dagster_dbt import DagsterDbtTranslator, DbtCliResource, dbt_assets
+from dagster import AssetKey, AssetExecutionContext
+from dagster_dbt import DagsterDbtTranslator, dbt_assets
 from dagster import asset
 
-from ..config.config import ProdConfig, DevConfig, StageConfig
 from ..project import dbt_project
 
 
@@ -19,17 +18,16 @@ class CustomDagsterDbtTranslator(DagsterDbtTranslator):
             return super().get_asset_key(dbt_resource_props)
 
 
-@dbt_assets(
-    manifest=dbt_project.manifest_path,
-    dagster_dbt_translator=CustomDagsterDbtTranslator(),
-    required_resource_keys={"env_config", "dbt"}
-)
-def ae_exam_dbt_assets(context: AssetExecutionContext, ):
+@dbt_assets(manifest=dbt_project.manifest_path, dagster_dbt_translator=CustomDagsterDbtTranslator(), required_resource_keys={"env_config", "dbt"})
+def ae_exam_dbt_assets(
+    context: AssetExecutionContext,
+):
     if context.resources.env_config.env == "dev":
         args = ["build", "--profiles-dir", "~/.dbt"]
     else:
         args = ["build"]
     yield from context.resources.dbt.cli(args, context=context).stream()
+
 
 @asset(deps=["finance_report", "marketing_report"], required_resource_keys={"snowflake", "env_config"})
 def s3_file_report_stage(context) -> None:
@@ -51,7 +49,7 @@ def s3_file_report_stage(context) -> None:
 
 
 @asset(deps=["s3_file_report_stage"], required_resource_keys={"snowflake", "env_config"})
-def finance_report_file(context: AssetExecutionContext) -> None :
+def finance_report_file(context: AssetExecutionContext) -> None:
     env_config = context.resources.env_config
     database = env_config.snowflake_database
     table_name = "finance_report"
@@ -68,7 +66,7 @@ def finance_report_file(context: AssetExecutionContext) -> None :
 
 
 @asset(deps=["s3_file_report_stage"], required_resource_keys={"snowflake", "env_config"})
-def marketing_report_file(context: AssetExecutionContext) -> None :
+def marketing_report_file(context: AssetExecutionContext) -> None:
     env_config = context.resources.env_config
     database = env_config.snowflake_database
     table_name = "marketing_report"

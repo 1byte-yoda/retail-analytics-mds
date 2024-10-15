@@ -16,9 +16,9 @@ def test_s3_file_report_stage(fake_asset_context):
     with fake_asset_context.resources.snowflake.get_connection() as conn:
         check_stage_exist_query = f"""
             SELECT 1
-            FROM INFORMATION_SCHEMA.STAGES 
-            WHERE STAGE_SCHEMA = '{conn.schema}' 
-                AND STAGE_NAME = 'EVENTS_STAGE' 
+            FROM INFORMATION_SCHEMA.STAGES
+            WHERE STAGE_SCHEMA = '{conn.schema}'
+                AND STAGE_NAME = 'EVENTS_STAGE'
                 AND STAGE_CATALOG = '{conn.database}'
         """
         check_rows = conn.cursor().execute(check_stage_exist_query).fetchall()
@@ -31,9 +31,9 @@ def test_events_table_asset(fake_asset_context):
     with fake_asset_context.resources.snowflake.get_connection() as conn:
         check_table_exist_query = f"""
             SELECT 1
-            FROM INFORMATION_SCHEMA.TABLES 
-            WHERE TABLE_SCHEMA = '{conn.schema}' 
-                AND TABLE_NAME = 'EVENTS' 
+            FROM INFORMATION_SCHEMA.TABLES
+            WHERE TABLE_SCHEMA = '{conn.schema}'
+                AND TABLE_NAME = 'EVENTS'
                 AND TABLE_CATALOG = '{conn.database}'
         """
         check_table_populated_query = f'SELECT COUNT(1) FROM "{conn.database}"."{conn.schema}".EVENTS'
@@ -51,11 +51,13 @@ def test_finance_report_file(fake_asset_context):
 
     client = boto3.client("s3")
     response = client.get_object(Bucket=env_config.bucket_name, Key=file_path)
-    df = pd.read_parquet(io.BytesIO(response['Body'].read()))
-    expected_df = pd.DataFrame.from_dict({
-        "CUSTOMER_COUNTRY": ['Brazil', 'Philippines', 'United States', 'Not Available', 'Australia'],
-        "TOTAL_VALUE": [4512.82, 5644.28, 2603.88, 1733.4, 36.07]
-    })
+    df = pd.read_parquet(io.BytesIO(response["Body"].read()))
+    expected_df = pd.DataFrame.from_dict(
+        {
+            "CUSTOMER_COUNTRY": ["Brazil", "Philippines", "United States", "Not Available", "Australia"],
+            "TOTAL_VALUE": [4512.82, 5644.28, 2603.88, 1733.4, 36.07],
+        }
+    )
     assert_frame_equal(df, expected_df)
 
 
@@ -67,17 +69,16 @@ def test_marketing_report_file(fake_asset_context):
 
     client = boto3.client("s3")
     response = client.get_object(Bucket=env_config.bucket_name, Key=file_path)
-    df = pd.read_parquet(io.BytesIO(response['Body'].read()))
-    expected_df = pd.DataFrame.from_dict({
-        "CUSTOMER_COUNTRY": ['Brazil', 'Philippines', 'United States', 'Australia', 'Not Available'],
-        "TOTAL_TRANSACTIONS": [Decimal("314"), Decimal("382"), Decimal("179"), Decimal("2"), Decimal("123")]
-    })
+    df = pd.read_parquet(io.BytesIO(response["Body"].read()))
+    expected_df = pd.DataFrame.from_dict(
+        {
+            "CUSTOMER_COUNTRY": ["Brazil", "Philippines", "United States", "Australia", "Not Available"],
+            "TOTAL_TRANSACTIONS": [Decimal("314"), Decimal("382"), Decimal("179"), Decimal("2"), Decimal("123")],
+        }
+    )
     assert_frame_equal(df, expected_df)
 
 
 def test_ae_exam_dbt(fake_resources):
-    result = materialize(
-        assets=[ae_exam_dbt_assets],
-        resources=fake_resources
-    )
+    result = materialize(assets=[ae_exam_dbt_assets], resources=fake_resources)
     assert result.success

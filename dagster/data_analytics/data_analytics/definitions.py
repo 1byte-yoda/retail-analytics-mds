@@ -1,6 +1,6 @@
 import os
 
-from dagster import Definitions, load_assets_from_modules, EnvVar
+from dagster import Definitions, load_assets_from_modules
 from dagster_dbt import DbtCliResource
 from dagster_snowflake import SnowflakeResource
 
@@ -23,7 +23,7 @@ snowflake = SnowflakeResource(
     database=env_config.snowflake_database,
     schema=env_config.snowflake_schema,
     warehouse=env_config.snowflake_wh,
-    role=env_config.snowflake_role
+    role=env_config.snowflake_role,
 )
 
 dbt_dev_resource = DbtCliResource(
@@ -33,11 +33,7 @@ dbt_dev_resource = DbtCliResource(
 
 defs = Definitions(
     assets=all_assets,
-    resources={
-        "snowflake": snowflake,
-        "dbt": dbt_dev_resource,
-        "env_config": env_config
-    },
+    resources={"snowflake": snowflake, "dbt": dbt_dev_resource, "env_config": env_config},
     jobs=[indebted_ae_exam_job],
-    sensors=[make_slack_on_failure_sensor(env_config=env_config)]
+    sensors=[make_slack_on_failure_sensor(env_config=env_config)],
 )

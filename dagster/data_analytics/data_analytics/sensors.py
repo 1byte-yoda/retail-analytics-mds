@@ -1,12 +1,14 @@
-import os
+from typing import Union
 
 from dagster import SensorDefinition, EnvVar
 from dagster_slack import make_slack_on_run_failure_sensor
 
+from ..data_analytics.config.config import ProdConfig, DevConfig, StageConfig
 
-def make_slack_on_failure_sensor() -> SensorDefinition:
+
+def make_slack_on_failure_sensor(env_config: Union[ProdConfig, DevConfig, StageConfig]) -> SensorDefinition:
     return make_slack_on_run_failure_sensor(
-        channel="#etl-alert",
-        slack_token=EnvVar("SLACK_DAGSTER_ETL_BOT_TOKEN"),
-        webserver_base_url="http://127.0.0.1:3000/"
+        channel=env_config.slack_alert_channel,
+        slack_token=env_config.slack_token,
+        webserver_base_url=env_config.dagster_webserver_url
     )

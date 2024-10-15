@@ -10,6 +10,7 @@ class BaseConfig:
     reports_folder = "reports"
     data_folder = "data"
     snowflake_table_name = "events"
+    slack_alert_channel = "#etl-alert"
     datatypes = {
         "transaction_id": "INT",
         "purchase_price": "FLOAT",
@@ -55,6 +56,8 @@ class ProdConfig(BaseConfig):
         self.aws_key_id = secrets.get("aws-key-id")
         self.aws_secret_key = secrets.get("aws-secret-key")
         self.snowflake_role = "TRANSFORM_PROD"
+        self.slack_token = secrets.get("slack-dagster-etl-bot-token")
+        self.dagster_webserver_url = "http://127.0.0.1:3000/"
 
 
 class StageConfig(BaseConfig):
@@ -70,6 +73,8 @@ class StageConfig(BaseConfig):
         self.aws_key_id = secrets.get("aws-key-id")
         self.aws_secret_key = secrets.get("aws-secret-key")
         self.snowflake_role = "TRANSFORM_STAGE"
+        self.slack_token = secrets.get("slack-dagster-etl-bot-token")
+        self.dagster_webserver_url = "http://127.0.0.1:3000/"
 
 
 class DevConfig(BaseConfig):
@@ -85,6 +90,8 @@ class DevConfig(BaseConfig):
         self.aws_key_id = secrets.get("AWS_KEY_ID")
         self.aws_secret_key = secrets.get("AWS_SECRET_KEY")
         self.snowflake_role = "TRANSFORM_DEV"
+        self.slack_token = secrets.get("SLACK_DAGSTER_ETL_BOT_TOKEN")
+        self.dagster_webserver_url = "http://127.0.0.1:3000/"
 
 
 ENV_CONFIGS = {

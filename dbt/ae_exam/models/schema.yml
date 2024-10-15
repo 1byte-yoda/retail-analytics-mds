@@ -2,8 +2,93 @@ version: 2
 
 models:
   - name: fact_events
+    description: "Fact Table containing platform events of product transactions"
     columns:
       - name: transaction_id
+        description: "Unique identifier of each transaction performed in the platform"
         tests:
           - unique
+          - not_null
+      - name: purchase_price
+        description: "The original price when the product was bought to a supplier"
+        tests:
+          - positive_value
+          - not_null
+      - name: product_value
+        description: "The retail price of the product."
+        tests:
+          - positive_value
+          - not_null
+      - name: product_name
+        description: "The name of the product."
+        tests:
+          - not_null
+      - name: transaction_date
+        description: "The date when the transaction occurred. In YYYY-mm-dd format"
+        tests:
+          - not_null
+      - name: customer_id
+        description: "The foreign key for the customer table"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_customers')
+              field: id
+      - name: client_info_id
+        description: "The foreign key for the client_info table"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_client_info')
+              field: id
+
+  - name: dim_client_info
+    description: "Dimension table containing the client's info"
+    columns:
+      - name: id
+        description: "Unique identifier of each client in the platform"
+        tests:
+          - unique
+          - not_null
+      - name: client_country
+        description: "The country where the client resides"
+        tests:
+          - not_null
+
+  - name: dim_customers
+    description: "Dimension table containing the customer's info in the platform"
+    columns:
+      - name: id
+        description: "Unique identifier of each customer in the platform"
+        tests:
+          - unique
+          - not_null
+      - name: first_name
+        description: "The first name of the customer"
+        tests:
+          - not_null
+          - masked_value
+      - name: last_name
+        description: "The last name of the customer"
+        tests:
+          - not_null
+          - masked_value
+      - name: email
+        description: "The email address of the customer"
+        tests:
+          - not_null
+          - masked_value
+      - name: gender
+        description: "The gender of the customer"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [
+                "Male",
+                "Female",
+                "Others"
+              ]
+      - name: customer_country
+        description: "The country where the customer resides"
+        tests:
           - not_null

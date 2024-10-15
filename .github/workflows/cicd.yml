@@ -28,7 +28,7 @@ jobs:
         working-directory: dbt/ae_exam
 
       - name: 'Beautify SQL Code'
-        run: DBT_SNOWFLAKE_ACCOUNT_STAGE=${{ secrets.DBT_SNOWFLAKE_ACCOUNT_STAGE }} DBT_SNOWFLAKE_PASSWORD_STAGE=${{ secrets.DBT_SNOWFLAKE_PASSWORD_STAGE }} sqlfluff fix .
+        run: DBT_SNOWFLAKE_ACCOUNT_DEV=${{ secrets.DBT_SNOWFLAKE_ACCOUNT_STAGE }} DBT_SNOWFLAKE_PASSWORD_DEV=${{ secrets.DBT_SNOWFLAKE_PASSWORD_STAGE }} sqlfluff fix .
         working-directory: dbt/ae_exam
 
   terraform:

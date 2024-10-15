@@ -16,7 +16,7 @@ env_config = ENV_CONFIGS[env]
 
 all_assets = load_assets_from_modules([platform_events, ae_exam])
 
-snowflake_io_manager = SnowflakeResource(
+snowflake = SnowflakeResource(
     account=env_config.snowflake_account,
     user=env_config.snowflake_user,
     password=env_config.snowflake_password,
@@ -34,7 +34,7 @@ dbt_dev_resource = DbtCliResource(
 defs = Definitions(
     assets=all_assets,
     resources={
-        "snowflake": snowflake_io_manager,
+        "snowflake": snowflake,
         "dbt": dbt_dev_resource,
         "env_config": env_config
     },

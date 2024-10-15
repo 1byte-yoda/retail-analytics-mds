@@ -1,10 +1,11 @@
 import datetime
-from typing import Mapping, Any
+from typing import Mapping, Any, Union
 
 from dagster import AssetKey, AssetExecutionContext, asset_check, AssetCheckExecutionContext, AssetCheckResult, AssetCheckSeverity, op
 from dagster_dbt import DagsterDbtTranslator, DbtCliResource, dbt_assets
 from dagster import asset
 
+from ..config.config import ProdConfig, DevConfig, StageConfig
 from ..project import dbt_project
 
 
@@ -21,10 +22,9 @@ class CustomDagsterDbtTranslator(DagsterDbtTranslator):
 @dbt_assets(
     manifest=dbt_project.manifest_path,
     dagster_dbt_translator=CustomDagsterDbtTranslator(),
-    required_resource_keys={"env_config"}
 )
-def ae_exam_dbt_assets(context: AssetExecutionContext, dbt: DbtCliResource):
-    if context.resources.env_config.env == "dev":
+def ae_exam_dbt_assets(context: AssetExecutionContext, dbt: DbtCliResource, env_config: Union[ProdConfig, DevConfig, StageConfig]):
+    if env_config.env == "dev":
         args = ["build", "--profiles-dir", "~/.dbt"]
     else:
         args = ["build"]

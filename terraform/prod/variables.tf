@@ -1,6 +1,6 @@
 variable "env" {
   description = "The Environment Variable in which the Infrastructure will get created"
-  default = "prod"
+  default     = "prod"
 }
 
 variable "snowflake_account" {

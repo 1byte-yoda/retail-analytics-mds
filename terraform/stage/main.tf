@@ -2,15 +2,15 @@ terraform {
   required_version = "~> 1.8"
   required_providers {
     aws = {
-      source = "hashicorp/aws"
+      source  = "hashicorp/aws"
       version = "~> 5.0"
     }
     snowflake = {
-      source = "Snowflake-Labs/snowflake"
+      source  = "Snowflake-Labs/snowflake"
       version = "0.97.0"
     }
     random = {
-      source = "hashicorp/random"
+      source  = "hashicorp/random"
       version = "~> 3.0"
     }
   }
@@ -26,8 +26,8 @@ provider "aws" {
   region = "ap-southeast-2"
 }
 provider "snowflake" {
-  account                = var.snowflake_account
-  user                   = var.snowflake_username
-  password               = var.snowflake_password
-  role                   = var.snowflake_role
+  account  = var.snowflake_account
+  user     = var.snowflake_username
+  password = var.snowflake_password
+  role     = var.snowflake_role
 }

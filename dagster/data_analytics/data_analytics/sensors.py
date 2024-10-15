@@ -3,7 +3,7 @@ from typing import Union
 from dagster import SensorDefinition
 from dagster_slack import make_slack_on_run_failure_sensor
 
-from ..data_analytics.config.config import ProdConfig, DevConfig, StageConfig
+from .config.config import ProdConfig, DevConfig, StageConfig
 
 
 def make_slack_on_failure_sensor(env_config: Union[ProdConfig, DevConfig, StageConfig]) -> SensorDefinition:

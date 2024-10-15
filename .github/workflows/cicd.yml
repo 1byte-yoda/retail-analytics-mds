@@ -90,7 +90,6 @@ jobs:
   test:
     name: 'Pytest Dagster Objects'
     runs-on: ubuntu-latest
-    needs: terraform
 
     env:
       AWS_REGION: 'ap-southeast-2'

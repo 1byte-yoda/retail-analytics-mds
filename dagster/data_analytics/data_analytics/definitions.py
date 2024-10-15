@@ -1,6 +1,6 @@
 import os
 
-from dagster import Definitions, load_assets_from_modules
+from dagster import Definitions, load_assets_from_modules, ScheduleDefinition
 from dagster_dbt import DbtCliResource
 from dagster_snowflake import SnowflakeResource
 
@@ -31,9 +31,15 @@ dbt_dev_resource = DbtCliResource(
     target=env,
 )
 
+indebted_ae_schedule = ScheduleDefinition(
+    job=indebted_ae_exam_job,
+    cron_schedule="0 1 * * *", # every 1am UTC daily
+)
+
 defs = Definitions(
     assets=all_assets,
     resources={"snowflake": snowflake, "dbt": dbt_dev_resource, "env_config": env_config},
     jobs=[indebted_ae_exam_job],
     sensors=[make_slack_on_failure_sensor(env_config=env_config)],
+    schedules=[indebted_ae_schedule]
 )

@@ -1,8 +1,8 @@
+import json
 import os
 
+import boto3
 from dotenv import load_dotenv
-
-load_dotenv()
 
 
 class BaseConfig:
@@ -23,44 +23,68 @@ class BaseConfig:
         "client_country": "VARCHAR(255)",
     }
 
+    @classmethod
+    def get_secrets(cls, env: str) -> dict:
+        if env == "dev":
+            load_dotenv()
+            return dict(os.environ)
+
+        else:
+            region_name = "ap-southeast-2"
+            session = boto3.session.Session()
+            client = session.client(
+                service_name='secretsmanager',
+                region_name=region_name
+            )
+            response = client.get_secret_value(
+                SecretId=f'ae_exam_secrets_{env}',
+            )
+            return json.loads(response["SecretString"])
+
 
 class ProdConfig(BaseConfig):
-    snowflake_account = os.environ.get("SNOWFLAKE_ACCOUNT")
-    snowflake_user = os.environ.get("SNOWFLAKE_USER")
-    snowflake_password = os.environ.get("SNOWFLAKE_PASSWORD")
-    snowflake_database = "PLATFORM_PROD"
-    snowflake_schema = "RAW"
-    snowflake_wh = "EXAM_WH_PROD"
-    bucket_name = "ae-exam-bucket-prod"
-    aws_key_id = os.environ.get("AWS_KEY_ID")
-    aws_secret_key = os.environ.get("AWS_SECRET_KEY")
-    snowflake_role = "TRANSFORM_PROD"
+    def __init__(self):
+        secrets = self.get_secrets(env="prod")
+        self.snowflake_account = secrets.get("snowflake-account")
+        self.snowflake_user = secrets.get("snowflake-user")
+        self.snowflake_password = secrets.get("snowflake-password")
+        self.snowflake_database = "PLATFORM_PROD"
+        self.snowflake_schema = "RAW"
+        self.snowflake_wh = "EXAM_WH_PROD"
+        self.bucket_name = "ae-exam-bucket-prod"
+        self.aws_key_id = secrets.get("aws-key-id")
+        self.aws_secret_key = secrets.get("aws-secret-key")
+        self.snowflake_role = "TRANSFORM_PROD"
 
 
 class StageConfig(BaseConfig):
-    snowflake_account = os.environ.get("SNOWFLAKE_ACCOUNT")
-    snowflake_user = os.environ.get("SNOWFLAKE_USER")
-    snowflake_password = os.environ.get("SNOWFLAKE_PASSWORD")
-    snowflake_database = "PLATFORM_STAGE"
-    snowflake_schema = "RAW"
-    snowflake_wh = "EXAM_WH_STAGE"
-    bucket_name = "ae-exam-bucket-stage"
-    aws_key_id = os.environ.get("AWS_KEY_ID")
-    aws_secret_key = os.environ.get("AWS_SECRET_KEY")
-    snowflake_role = "TRANSFORM_STAGE"
+    def __init__(self):
+        secrets = self.get_secrets(env="stage")
+        self.snowflake_account = secrets.get("snowflake-account")
+        self.snowflake_user = secrets.get("snowflake-user")
+        self.snowflake_password = secrets.get("snowflake-password")
+        self.snowflake_database = "PLATFORM_STAGE"
+        self.snowflake_schema = "RAW"
+        self.snowflake_wh = "EXAM_WH_STAGE"
+        self.bucket_name = "ae-exam-bucket-stage"
+        self.aws_key_id = secrets.get("aws-key-id")
+        self.aws_secret_key = secrets.get("aws-secret-key")
+        self.snowflake_role = "TRANSFORM_STAGE"
 
 
 class DevConfig(BaseConfig):
-    snowflake_account = os.environ.get("SNOWFLAKE_ACCOUNT")
-    snowflake_user = os.environ.get("SNOWFLAKE_USER")
-    snowflake_password = os.environ.get("SNOWFLAKE_PASSWORD")
-    snowflake_database = "PLATFORM_DEV"
-    snowflake_schema = "RAW"
-    snowflake_wh = "EXAM_WH_DEV"
-    bucket_name = "ae-exam-bucket-dev"
-    aws_key_id = os.environ.get("AWS_KEY_ID")
-    aws_secret_key = os.environ.get("AWS_SECRET_KEY")
-    snowflake_role = "TRANSFORM_DEV"
+    def __init__(self):
+        secrets = self.get_secrets(env="dev")
+        self.snowflake_account = secrets.get("SNOWFLAKE_ACCOUNT")
+        self.snowflake_user = secrets.get("SNOWFLAKE_USER")
+        self.snowflake_password = secrets.get("SNOWFLAKE_PASSWORD")
+        self.snowflake_database = "PLATFORM_DEV"
+        self.snowflake_schema = "RAW"
+        self.snowflake_wh = "EXAM_WH_DEV"
+        self.bucket_name = "ae-exam-bucket-dev"
+        self.aws_key_id = secrets.get("AWS_KEY_ID")
+        self.aws_secret_key = secrets.get("AWS_SECRET_KEY")
+        self.snowflake_role = "TRANSFORM_DEV"
 
 
 ENV_CONFIGS = {

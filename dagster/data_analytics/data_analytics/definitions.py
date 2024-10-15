@@ -1,5 +1,3 @@
-import os
-
 from dagster import Definitions, load_assets_from_modules, EnvVar
 from dagster_dbt import DbtCliResource
 from dagster_snowflake import SnowflakeResource
@@ -11,7 +9,7 @@ from .sensors import make_slack_on_failure_sensor
 from .config.config import ENV_CONFIGS
 
 
-env: str = os.environ.get("ENV", "dev")
+env: str = "prod"
 env_config = ENV_CONFIGS[env]
 
 all_assets = load_assets_from_modules([platform_events, ae_exam])

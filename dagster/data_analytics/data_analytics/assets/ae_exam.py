@@ -20,7 +20,8 @@ class CustomDagsterDbtTranslator(DagsterDbtTranslator):
 
 @dbt_assets(
     manifest=dbt_project.manifest_path,
-    dagster_dbt_translator=CustomDagsterDbtTranslator()
+    dagster_dbt_translator=CustomDagsterDbtTranslator(),
+    required_resource_keys={"env_config"}
 )
 def ae_exam_dbt_assets(context: AssetExecutionContext, dbt: DbtCliResource):
     if context.resources.env_config.env == "dev":

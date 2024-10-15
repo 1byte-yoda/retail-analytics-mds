@@ -1,0 +1,34 @@
+ae_exam:
+  outputs:
+    dev:
+      account: "{{ env_var('DBT_SNOWFLAKE_ACCOUNT_DEV') }}"
+      password: "{{ env_var('DBT_SNOWFLAKE_PASSWORD_DEV') }}"
+      role: TRANSFORM_DEV
+      threads: 1
+      type: snowflake
+      user: dbt_dev
+      database: PLATFORM_DEV
+      schema: RAW
+      warehouse: EXAM_WH_DEV
+    stage:
+      account: "{{ env_var('DBT_SNOWFLAKE_ACCOUNT_STAGE') }}"
+      password: "{{ env_var('DBT_SNOWFLAKE_PASSWORD_STAGE') }}"
+      role: TRANSFORM_STAGE
+      threads: 1
+      type: snowflake
+      user: dbt_stage
+      database: PLATFORM_STAGE
+      schema: RAW
+      warehouse: EXAM_WH_STAGE
+    prod:
+      account: "{{ env_var('DBT_SNOWFLAKE_ACCOUNT_PROD') }}"
+      password: "{{ env_var('DBT_SNOWFLAKE_PASSWORD_PROD') }}"
+      role: TRANSFORM_PROD
+      threads: 1
+      type: snowflake
+      user: dbt_prod
+      database: PLATFORM_PROD
+      schema: RAW
+      warehouse: EXAM_WH_PROD
+  target: dev
+

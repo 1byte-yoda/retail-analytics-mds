@@ -2,9 +2,6 @@ name: AE_EXAM_CICD
 
 on:
   push:
-    branches-ignore:
-      - master
-  pull_request:
     branches:
       - master
 
@@ -40,11 +37,11 @@ jobs:
         uses: actions/checkout@v2
 
       - name: 'Change Directory to Terraform Staging root dir'
-        if: github.ref != 'refs/heads/main'
+        if: github.ref != 'refs/heads/master'
         run: cd terraform/stage
 
       - name: 'Change Directory to Terraform Staging root dir'
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/master'
         run: cd terraform/prod
 
       - name: 'Configure AWS credentials'
@@ -93,5 +90,5 @@ jobs:
         run: terraform plan -out=tfplan
 
       - name: 'Terraform Apply'
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/master'
         run: terraform apply -auto-approve tfplan

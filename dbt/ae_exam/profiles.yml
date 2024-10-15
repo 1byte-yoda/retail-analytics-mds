@@ -1,8 +1,8 @@
 ae_exam:
   outputs:
     dev:
-      account: "{{ env_var('DBT_SNOWFLAKE_ACCOUNT_DEV') }}"
-      password: "{{ env_var('DBT_SNOWFLAKE_PASSWORD_DEV') }}"
+      account: "{{ env_var('DBT_SNOWFLAKE_ACCOUNT_DEV', 'N/A') }}"
+      password: "{{ env_var('DBT_SNOWFLAKE_PASSWORD_DEV', 'N/A') }}"
       role: TRANSFORM_DEV
       threads: 1
       type: snowflake
@@ -11,8 +11,8 @@ ae_exam:
       schema: RAW
       warehouse: EXAM_WH_DEV
     stage:
-      account: "{{ env_var('DBT_SNOWFLAKE_ACCOUNT_STAGE') }}"
-      password: "{{ env_var('DBT_SNOWFLAKE_PASSWORD_STAGE') }}"
+      account: "{{ env_var('DBT_SNOWFLAKE_ACCOUNT_STAGE', 'N/A') }}"
+      password: "{{ env_var('DBT_SNOWFLAKE_PASSWORD_STAGE', 'N/A') }}"
       role: TRANSFORM_STAGE
       threads: 1
       type: snowflake
@@ -21,8 +21,8 @@ ae_exam:
       schema: RAW
       warehouse: EXAM_WH_STAGE
     prod:
-      account: "{{ env_var('DBT_SNOWFLAKE_ACCOUNT_PROD') }}"
-      password: "{{ env_var('DBT_SNOWFLAKE_PASSWORD_PROD') }}"
+      account: "{{ env_var('DBT_SNOWFLAKE_ACCOUNT_PROD', 'N/A') }}"
+      password: "{{ env_var('DBT_SNOWFLAKE_PASSWORD_PROD', 'N/A') }}"
       role: TRANSFORM_PROD
       threads: 1
       type: snowflake

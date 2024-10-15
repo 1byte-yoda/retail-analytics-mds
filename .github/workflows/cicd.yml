@@ -118,9 +118,15 @@ jobs:
         working-directory: dbt/ae_exam
         if: github.ref == 'refs/heads/master'
 
-      - name: 'Run dbt compile'
+      - name: 'Run dbt compile prod'
         run: DBT_SNOWFLAKE_ACCOUNT_PROD=${{ secrets.DBT_SNOWFLAKE_ACCOUNT_PROD }} DBT_SNOWFLAKE_PASSWORD_PROD=${{ secrets.DBT_SNOWFLAKE_PASSWORD_PROD }} dbt compile
         working-directory: dbt/ae_exam
+        if: github.ref == 'refs/heads/master'
+
+      - name: 'Run dbt compile stage'
+        run: DBT_SNOWFLAKE_ACCOUNT_PROD=${{ secrets.DBT_SNOWFLAKE_ACCOUNT_STAGE }} DBT_SNOWFLAKE_PASSWORD_PROD=${{ secrets.DBT_SNOWFLAKE_PASSWORD_STAGE }} dbt compile
+        working-directory: dbt/ae_exam
+        if: github.ref != 'refs/heads/master'
 
       - name: 'Run Pytest with Coverage Report'
         run: |

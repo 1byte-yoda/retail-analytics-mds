@@ -109,12 +109,12 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: 'Run dbt debug for staging environment'
-        run: DBT_SNOWFLAKE_ACCOUNT_STAGE=${{ secrets.DBT_SNOWFLAKE_ACCOUNT_STAGE }}; DBT_SNOWFLAKE_PASSWORD_STAGE=${{ secrets.DBT_SNOWFLAKE_PASSWORD_STAGE }} dbt debug --target stage
+        run: DBT_SNOWFLAKE_ACCOUNT_STAGE=${{ secrets.DBT_SNOWFLAKE_ACCOUNT_STAGE }} DBT_SNOWFLAKE_PASSWORD_STAGE=${{ secrets.DBT_SNOWFLAKE_PASSWORD_STAGE }} dbt debug --target stage
         working-directory: dbt/ae_exam
         if: github.ref != 'refs/heads/master'
 
       - name: 'Run dbt debug for prod environment'
-        run: DBT_SNOWFLAKE_ACCOUNT_PROD=${{ secrets.DBT_SNOWFLAKE_ACCOUNT_PROD }}; DBT_SNOWFLAKE_PASSWORD_PROD=${{ secrets.DBT_SNOWFLAKE_PASSWORD_PROD }} dbt debug --target prod
+        run: DBT_SNOWFLAKE_ACCOUNT_PROD=${{ secrets.DBT_SNOWFLAKE_ACCOUNT_PROD }} DBT_SNOWFLAKE_PASSWORD_PROD=${{ secrets.DBT_SNOWFLAKE_PASSWORD_PROD }} dbt debug --target prod
         working-directory: dbt/ae_exam
         if: github.ref == 'refs/heads/master'
 

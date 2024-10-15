@@ -23,7 +23,11 @@ class CustomDagsterDbtTranslator(DagsterDbtTranslator):
     dagster_dbt_translator=CustomDagsterDbtTranslator()
 )
 def ae_exam_dbt_assets(context: AssetExecutionContext, dbt: DbtCliResource):
-    yield from dbt.cli(["build"], context=context).stream()
+    if context.resources.env_config.env == "dev":
+        args = ["build", "--profiles-dir", "~/.dbt"]
+    else:
+        args = ["build"]
+    yield from dbt.cli(args, context=context).stream()
 
 @asset(deps=["finance_report", "marketing_report"], required_resource_keys={"snowflake", "env_config"})
 def s3_file_report_stage(context) -> None:

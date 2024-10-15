@@ -45,7 +45,8 @@ class BaseConfig:
 
 class ProdConfig(BaseConfig):
     def __init__(self):
-        secrets = self.get_secrets(env="prod")
+        self.env = "dev"
+        secrets = self.get_secrets(env=self.env)
         self.snowflake_account = secrets.get("snowflake-account")
         self.snowflake_user = secrets.get("snowflake-user")
         self.snowflake_password = secrets.get("snowflake-password")
@@ -62,7 +63,8 @@ class ProdConfig(BaseConfig):
 
 class StageConfig(BaseConfig):
     def __init__(self):
-        secrets = self.get_secrets(env="stage")
+        self.env = "stage"
+        secrets = self.get_secrets(env=self.env)
         self.snowflake_account = secrets.get("snowflake-account")
         self.snowflake_user = secrets.get("snowflake-user")
         self.snowflake_password = secrets.get("snowflake-password")
@@ -79,7 +81,8 @@ class StageConfig(BaseConfig):
 
 class DevConfig(BaseConfig):
     def __init__(self):
-        secrets = self.get_secrets(env="dev")
+        self.env = "dev"
+        secrets = self.get_secrets(env=self.env)
         self.snowflake_account = secrets.get("SNOWFLAKE_ACCOUNT")
         self.snowflake_user = secrets.get("SNOWFLAKE_USER")
         self.snowflake_password = secrets.get("SNOWFLAKE_PASSWORD")

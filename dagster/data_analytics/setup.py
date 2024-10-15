@@ -4,5 +4,5 @@ setup(
     name="data_analytics",
     packages=find_packages(exclude=["data_analytics_tests"]),
     install_requires=["dagster", "dagster-cloud"],
-    extras_require={"dev": ["dagster-webserver", "pytest"]},
+    extras_require={"dev": ["dagster-webserver", "pytest", "black", "flake8", "sqlfluff", "sqlfluff-templater-dbt", "pytest-cov"]},
 )

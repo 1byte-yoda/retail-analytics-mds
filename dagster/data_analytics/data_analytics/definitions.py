@@ -37,5 +37,5 @@ defs = Definitions(
         "env_config": env_config
     },
     jobs=[indebted_ae_exam_job],
-    sensors=[make_slack_on_failure_sensor()]
+    sensors=[make_slack_on_failure_sensor(env_config=env_config)]
 )

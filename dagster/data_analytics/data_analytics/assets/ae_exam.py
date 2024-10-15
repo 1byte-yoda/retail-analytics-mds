@@ -30,53 +30,42 @@ def ae_exam_dbt_assets(
 
 
 @asset(deps=["finance_report", "marketing_report"], required_resource_keys={"snowflake", "env_config"})
-def s3_file_report_stage(context) -> None:
+def s3_file_report_stage(context: AssetExecutionContext) -> None:
     env_config = context.resources.env_config
-    database = env_config.snowflake_database
     schema = "REPORT"
-    bucket_name = env_config.bucket_name
-    reports_folder = env_config.reports_folder
-    folder_alias = env_config.folder_alias
-    stage = "report_stage"
+    s3_bucket = f"'s3://{env_config.bucket_name}/{env_config.reports_folder}/{env_config.folder_alias}/'"
+    stage = f'"{env_config.snowflake_database}"."{schema}".report_stage'
 
     query = f"""
-        CREATE OR REPLACE STAGE "{database}"."{schema}".{stage}
-        URL = 's3://{bucket_name}/{reports_folder}/{folder_alias}/'
+        CREATE OR REPLACE STAGE {stage}
+        URL = {s3_bucket}
         FILE_FORMAT = (TYPE = PARQUET)
         CREDENTIALS = (AWS_KEY_ID='{env_config.aws_key_id}' AWS_SECRET_KEY='{env_config.aws_secret_key}');
     """
     context.resources.snowflake.execute_query(query)
 
 
-@asset(deps=["s3_file_report_stage"], required_resource_keys={"snowflake", "env_config"})
-def finance_report_file(context: AssetExecutionContext) -> None:
-    env_config = context.resources.env_config
-    database = env_config.snowflake_database
-    table_name = "finance_report"
+def _get_report_file_copy_query(table_name: str, database: str) -> str:
     schema = "REPORT"
     today = datetime.datetime.now().strftime("%Y-%m-%d")
 
     query = f"""
-        COPY INTO @"{database}"."{schema}".report_stage/finance_report_{today}
+        COPY INTO @"{database}"."{schema}".report_stage/{table_name}_{today}
         FROM "{database}".{schema}.{table_name}
         OVERWRITE = TRUE HEADER = TRUE
     """
-    context.resources.snowflake.execute_query(query)
+    return query
+
+
+@asset(deps=["s3_file_report_stage"], required_resource_keys={"snowflake", "env_config"})
+def finance_report_file(context: AssetExecutionContext) -> None:
+    copy_file_query = _get_report_file_copy_query(table_name="finance_report", database=context.resources.env_config.snowflake_database)
+    context.resources.snowflake.execute_query(copy_file_query)
     context.log.info("Finance Report File Unloaded Successfully")
 
 
 @asset(deps=["s3_file_report_stage"], required_resource_keys={"snowflake", "env_config"})
 def marketing_report_file(context: AssetExecutionContext) -> None:
-    env_config = context.resources.env_config
-    database = env_config.snowflake_database
-    table_name = "marketing_report"
-    schema = "REPORT"
-    today = datetime.datetime.now().strftime("%Y-%m-%d")
-
-    query = f"""
-        COPY INTO @"{database}"."{schema}".report_stage/marketing_report_{today}
-        FROM "{database}".{schema}.{table_name}
-        OVERWRITE = TRUE HEADER = TRUE
-    """
-    context.resources.snowflake.execute_query(query)
+    copy_file_query = _get_report_file_copy_query(table_name="marketing_report", database=context.resources.env_config.snowflake_database)
+    context.resources.snowflake.execute_query(copy_file_query)
     context.log.info("Marketing Report File Unloaded Successfully")

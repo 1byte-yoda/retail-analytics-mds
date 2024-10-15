@@ -79,12 +79,12 @@ jobs:
       - name: 'Terraform Plan'
         run: |
           ls
-          TF_TOKEN_app_terraform_io=${{ secrets.TERRAFORM_TOKEN }} terraform plan -out=tfplan
+          TF_TOKEN_app_terraform_io=${{ secrets.TERRAFORM_TOKEN }} terraform plan
         working-directory: ${{ env.WORKING_DIR }}
 
       - name: 'Terraform Apply'
         if: github.ref == 'refs/heads/master'
-        run: TF_TOKEN_app_terraform_io=${{ secrets.TERRAFORM_TOKEN }} terraform apply -auto-approve tfplan
+        run: TF_TOKEN_app_terraform_io=${{ secrets.TERRAFORM_TOKEN }} terraform apply -auto-approve
         working-directory: ${{ env.WORKING_DIR }}
 
   test:

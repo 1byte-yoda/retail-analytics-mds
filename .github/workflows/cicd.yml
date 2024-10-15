@@ -14,6 +14,9 @@ jobs:
       - name: 'Checkout GitHub repository'
         uses: actions/checkout@v2
 
+      - name: 'Install Project Required Modules'
+        run: pip install -r requirements.txt
+
       - name: 'Change Directory to Dagster tests directory'
         run: cd dagster/data_analytics
 
@@ -87,7 +90,9 @@ jobs:
         run: tfsec .
 
       - name: 'Terraform Plan'
-        run: terraform plan -out=tfplan
+        run: |
+          ls
+          terraform plan -out=tfplan
 
       - name: 'Terraform Apply'
         if: github.ref == 'refs/heads/master'

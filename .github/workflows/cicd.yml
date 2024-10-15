@@ -10,7 +10,17 @@ jobs:
     name: 'Pytest Dagster Objects'
     runs-on: ubuntu-latest
 
+    env:
+      AWS_REGION: 'ap-southeast-2'
+
     steps:
+      - name: 'Configure AWS credentials'
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
       - name: 'Checkout GitHub repository'
         uses: actions/checkout@v2
 

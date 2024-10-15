@@ -1,3 +1,6 @@
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/1byte-yoda/ae-tech-assessment/CI?label=build)
+[![codecov][code-cov-shield]][code-cov-url]
+
 You just started working for a company that sells products for a couple of countries in the world.
 
 The Data Engineering team set up a process where you will receive a file into an s3 bucket on a daily basis. (An example of the last one is available under the ```data/``` folder).
@@ -44,3 +47,6 @@ Before doing anything else, in `config.py`, rename the `folder_alias` variable t
 # User must also configure the AWS Credentials in Terraform
 # S3 Buckets are currently publicly accessible - it can be made private later
 # REPORT SQL Queries are incorrect - no group by and date range is out of bounds (start > end)
+
+[code-cov-shield]: https://codecov.io/gh/1byte-yoda/ae-tech-assessment/branch/master/graph/badge.svg?token=ZQ23COSI3V
+[code-cov-url]: https://codecov.io/gh/1byte-yoda/ae-tech-assessment

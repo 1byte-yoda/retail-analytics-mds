@@ -138,5 +138,10 @@ jobs:
       - name: 'Run Pytest with Coverage Report'
         run: |
           pip install pytest==8.3.3
-          ENV=stage DBT_SNOWFLAKE_ACCOUNT_STAGE=${{ secrets.DBT_SNOWFLAKE_ACCOUNT_STAGE }} DBT_SNOWFLAKE_PASSWORD_STAGE=${{ secrets.DBT_SNOWFLAKE_PASSWORD_STAGE }} pytest --junitxml=../../report.xml -v -s
+          ENV=stage DBT_SNOWFLAKE_ACCOUNT_STAGE=${{ secrets.DBT_SNOWFLAKE_ACCOUNT_STAGE }} DBT_SNOWFLAKE_PASSWORD_STAGE=${{ secrets.DBT_SNOWFLAKE_PASSWORD_STAGE }} pytest --cov --cov-report=xml -v -s
         working-directory: dagster/data_analytics
+
+      - name: Upload results to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}

@@ -22,8 +22,10 @@ jobs:
 
       - name: 'Lint Python Code'
         run: flake8 dagster/data_analytics
+
       - name: 'Install DBT Dependencies'
         run: dbt deps
+        working-directory: dbt/ae_exam
 
       - name: 'Beautify SQL Code'
         run: sqlfluff fix .

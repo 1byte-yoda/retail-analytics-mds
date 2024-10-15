@@ -118,18 +118,28 @@ jobs:
         working-directory: dbt/ae_exam
         if: github.ref == 'refs/heads/master'
 
+      - name: 'Run dbt deps for staging environment'
+        run: DBT_SNOWFLAKE_ACCOUNT_STAGE=${{ secrets.DBT_SNOWFLAKE_ACCOUNT_STAGE }} DBT_SNOWFLAKE_PASSWORD_STAGE=${{ secrets.DBT_SNOWFLAKE_PASSWORD_STAGE }} dbt deps --target stage
+        working-directory: dbt/ae_exam
+        if: github.ref != 'refs/heads/master'
+
+      - name: 'Run dbt deps for prod environment'
+        run: DBT_SNOWFLAKE_ACCOUNT_PROD=${{ secrets.DBT_SNOWFLAKE_ACCOUNT_PROD }} DBT_SNOWFLAKE_PASSWORD_PROD=${{ secrets.DBT_SNOWFLAKE_PASSWORD_PROD }} dbt deps --target prod
+        working-directory: dbt/ae_exam
+        if: github.ref == 'refs/heads/master'
+
       - name: 'Run dbt compile prod'
-        run: DBT_SNOWFLAKE_ACCOUNT_PROD=${{ secrets.DBT_SNOWFLAKE_ACCOUNT_PROD }} DBT_SNOWFLAKE_PASSWORD_PROD=${{ secrets.DBT_SNOWFLAKE_PASSWORD_PROD }} dbt compile
+        run: DBT_SNOWFLAKE_ACCOUNT_PROD=${{ secrets.DBT_SNOWFLAKE_ACCOUNT_PROD }} DBT_SNOWFLAKE_PASSWORD_PROD=${{ secrets.DBT_SNOWFLAKE_PASSWORD_PROD }} dbt compile --target prod
         working-directory: dbt/ae_exam
         if: github.ref == 'refs/heads/master'
 
       - name: 'Run dbt compile stage'
-        run: DBT_SNOWFLAKE_ACCOUNT_PROD=${{ secrets.DBT_SNOWFLAKE_ACCOUNT_STAGE }} DBT_SNOWFLAKE_PASSWORD_PROD=${{ secrets.DBT_SNOWFLAKE_PASSWORD_STAGE }} dbt compile
+        run: DBT_SNOWFLAKE_ACCOUNT_STAGE=${{ secrets.DBT_SNOWFLAKE_ACCOUNT_STAGE }} DBT_SNOWFLAKE_PASSWORD_STAGE=${{ secrets.DBT_SNOWFLAKE_PASSWORD_STAGE }} dbt compile --target stage
         working-directory: dbt/ae_exam
         if: github.ref != 'refs/heads/master'
 
       - name: 'Run Pytest with Coverage Report'
         run: |
           pip install pytest==8.3.3
-          ENV=stage DBT_SNOWFLAKE_ACCOUNT_PROD=${{ secrets.DBT_SNOWFLAKE_ACCOUNT_PROD }} DBT_SNOWFLAKE_PASSWORD_PROD=${{ secrets.DBT_SNOWFLAKE_PASSWORD_PROD }} pytest --junitxml=../../report.xml -v -s
+          ENV=stage DBT_SNOWFLAKE_ACCOUNT_STAGE=${{ secrets.DBT_SNOWFLAKE_ACCOUNT_STAGE }} DBT_SNOWFLAKE_PASSWORD_STAGE=${{ secrets.DBT_SNOWFLAKE_PASSWORD_STAGE }} pytest --junitxml=../../report.xml -v -s
         working-directory: dagster/data_analytics

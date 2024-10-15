@@ -1,14 +1,30 @@
-name: Terraform CI/CD
+name: AE_EXAM_CICD
 
 on:
   push:
-    branches:
-      - main
+    branches-ignore:
+      - master
   pull_request:
     branches:
-      - main
+      - master
 
 jobs:
+  test:
+    name: 'Pytest Dagster Objects'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 'Checkout GitHub repository'
+        uses: actions/checkout@v2
+
+      - name: 'Change Directory to Dagster tests directory'
+        run: cd dagster/data_analytics
+
+      - name: 'Run Pytest with Coverage Report'
+        run: |
+          pip install pytest==8.3.3
+          pytest --junitxml=../../report.xml -v -s
+
   terraform:
     name: 'Terraform Lint, Security Check, and Deploy'
     runs-on: ubuntu-latest
@@ -22,6 +38,14 @@ jobs:
     steps:
       - name: 'Checkout GitHub repository'
         uses: actions/checkout@v2
+
+      - name: 'Change Directory to Terraform Staging root dir'
+        if: github.ref != 'refs/heads/main'
+        run: cd terraform/stage
+
+      - name: 'Change Directory to Terraform Staging root dir'
+        if: github.ref == 'refs/heads/main'
+        run: cd terraform/prod
 
       - name: 'Configure AWS credentials'
         uses: aws-actions/configure-aws-credentials@v1

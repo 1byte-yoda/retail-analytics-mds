@@ -1,4 +1,4 @@
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/1byte-yoda/ae-tech-assessment/CI?label=build)
+[![codecov](https://codecov.io/github/codecov/ae-tech-assessment/branch/master/graph/badge.svg?token=tkq655ROg3)](https://app.codecov.io/github/codecov/ae-tech-assessment)
 [![codecov][code-cov-shield]][code-cov-url]
 
 You just started working for a company that sells products for a couple of countries in the world.

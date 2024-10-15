@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: 'Install Required Modules'
-        run: pip install black==24.10.0 flake8==7.1.1 sqlfluff==3.2.4 dbt-snowflake==1.8.3
+        run: pip install black==24.10.0 flake8==7.1.1 sqlfluff==3.2.4 dbt-snowflake==1.8.3 sqlfluff-templater-dbt==3.2.4
 
       - name: 'Beautify Python Code'
         run: black -l 150 dagster/data_analytics

@@ -6,90 +6,113 @@ on:
       - master
 
 jobs:
-#  terraform:
-#    name: 'Terraform Lint, Security Check, and Deploy'
-#    runs-on: ubuntu-latest
-#
-#    env:
-#      AWS_REGION: 'ap-southeast-2'
-#      TF_VERSION: '1.9.7'
-#      TFLINT_VERSION: '0.53.0'
-#      TFSEC_VERSION: '1.28.1'
-#
-#    steps:
-#      - name: 'Checkout GitHub repository'
-#        uses: actions/checkout@v2
-#
-#      - name: Determine Working Directory
-#        id: set_directory
-#        run: |
-#          if [[ "${GITHUB_REF}" == "refs/heads/master" ]]; then
-#            echo "WORKING_DIR=./terraform/prod" >> $GITHUB_ENV
-#          else
-#            echo "WORKING_DIR=./terraform/stage" >> $GITHUB_ENV
-#          fi
-#
-#      - name: 'Configure AWS credentials'
-#        uses: aws-actions/configure-aws-credentials@v1
-#        with:
-#          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#          aws-region: ${{ env.AWS_REGION }}
-#
-#      - name: 'Set up Terraform'
-#        uses: hashicorp/setup-terraform@v1
-#        with:
-#          terraform_version: ${{ env.TF_VERSION }}
-#
-#      - name: 'Install TFLint'
-#        run: |
-#          curl -sLo tflint.zip https://github.com/terraform-linters/tflint/releases/download/v${{ env.TFLINT_VERSION }}/tflint_linux_amd64.zip
-#          unzip tflint.zip -d /usr/local/bin/
-#          tflint --version
-#
-#      - name: 'Install tfsec'
-#        run: |
-#          curl -sLo tfsec https://github.com/aquasecurity/tfsec/releases/download/v${{ env.TFSEC_VERSION }}/tfsec-linux-amd64
-#          chmod +x tfsec
-#          mv tfsec /usr/local/bin/
-#          tfsec --version
-#
-#      - name: 'Terraform Init'
-#        run: TF_TOKEN_app_terraform_io=${{ secrets.TERRAFORM_TOKEN }} terraform init
-#        working-directory: ${{ env.WORKING_DIR }}
-#
-#      - name: 'Terraform Format'
-#        run: terraform fmt
-#        working-directory: ${{ env.WORKING_DIR }}
-#
-#      - name: 'Terraform Validate'
-#        run: terraform validate
-#        working-directory: ${{ env.WORKING_DIR }}
-#
-#      - name: 'TFLint'
-#        run: |
-#          tflint --init
-#          tflint
-#        working-directory: ${{ env.WORKING_DIR }}
-#
-#      - name: 'tfsec'
-#        run: tfsec .
-#        working-directory: ${{ env.WORKING_DIR }}
-#
-#      - name: 'Terraform Plan'
-#        run: |
-#          ls
-#          TF_TOKEN_app_terraform_io=${{ secrets.TERRAFORM_TOKEN }} terraform plan
-#        working-directory: ${{ env.WORKING_DIR }}
-#
-#      - name: 'Terraform Apply'
-#        if: github.ref == 'refs/heads/master'
-#        run: TF_TOKEN_app_terraform_io=${{ secrets.TERRAFORM_TOKEN }} terraform apply -auto-approve
-#        working-directory: ${{ env.WORKING_DIR }}
+  lint_and_format:
+    name: 'Format and Lint Python and DBT Code'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 'Checkout GitHub repository'
+        uses: actions/checkout@v2
+
+      - name: 'Install Required Modules'
+        run: pip install -r black==24.10.0 flake8==7.1.1 sqlfluff==3.2.4
+
+      - name: 'Beautify Python Code'
+        run: black -l 150 dagster/data_analytics
+
+      - name: 'Lint Python Code'
+        run: flake8 dagster/data_analytics
+
+      - name: 'Beautify SQL Code'
+        run: DBT_SNOWFLAKE_ACCOUNT_STAGE=${{ secrets.DBT_SNOWFLAKE_ACCOUNT_STAGE }} DBT_SNOWFLAKE_PASSWORD_STAGE=${{ secrets.DBT_SNOWFLAKE_PASSWORD_STAGE }} sqlfluff fix .
+        working-directory: dbt/ae_exam
+
+  terraform:
+    name: 'Terraform Lint, Security Check, and Deploy'
+    runs-on: ubuntu-latest
+    needs: lint_and_format
+
+    env:
+      AWS_REGION: 'ap-southeast-2'
+      TF_VERSION: '1.9.7'
+      TFLINT_VERSION: '0.53.0'
+      TFSEC_VERSION: '1.28.1'
+
+    steps:
+      - name: 'Checkout GitHub repository'
+        uses: actions/checkout@v2
+
+      - name: Determine Working Directory
+        id: set_directory
+        run: |
+          if [[ "${GITHUB_REF}" == "refs/heads/master" ]]; then
+            echo "WORKING_DIR=./terraform/prod" >> $GITHUB_ENV
+          else
+            echo "WORKING_DIR=./terraform/stage" >> $GITHUB_ENV
+          fi
+
+      - name: 'Configure AWS credentials'
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: 'Set up Terraform'
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: 'Install TFLint'
+        run: |
+          curl -sLo tflint.zip https://github.com/terraform-linters/tflint/releases/download/v${{ env.TFLINT_VERSION }}/tflint_linux_amd64.zip
+          unzip tflint.zip -d /usr/local/bin/
+          tflint --version
+
+      - name: 'Install tfsec'
+        run: |
+          curl -sLo tfsec https://github.com/aquasecurity/tfsec/releases/download/v${{ env.TFSEC_VERSION }}/tfsec-linux-amd64
+          chmod +x tfsec
+          mv tfsec /usr/local/bin/
+          tfsec --version
+
+      - name: 'Terraform Init'
+        run: TF_TOKEN_app_terraform_io=${{ secrets.TERRAFORM_TOKEN }} terraform init
+        working-directory: ${{ env.WORKING_DIR }}
+
+      - name: 'Terraform Format'
+        run: terraform fmt
+        working-directory: ${{ env.WORKING_DIR }}
+
+      - name: 'Terraform Validate'
+        run: terraform validate
+        working-directory: ${{ env.WORKING_DIR }}
+
+      - name: 'TFLint'
+        run: |
+          tflint --init
+          tflint
+        working-directory: ${{ env.WORKING_DIR }}
+
+      - name: 'tfsec'
+        run: tfsec .
+        working-directory: ${{ env.WORKING_DIR }}
+
+      - name: 'Terraform Plan'
+        run: |
+          ls
+          TF_TOKEN_app_terraform_io=${{ secrets.TERRAFORM_TOKEN }} terraform plan
+        working-directory: ${{ env.WORKING_DIR }}
+
+      - name: 'Terraform Apply'
+        if: github.ref == 'refs/heads/master'
+        run: TF_TOKEN_app_terraform_io=${{ secrets.TERRAFORM_TOKEN }} terraform apply -auto-approve
+        working-directory: ${{ env.WORKING_DIR }}
 
   test:
     name: 'Pytest Dagster Objects'
     runs-on: ubuntu-latest
+    needs: terraform
 
     env:
       AWS_REGION: 'ap-southeast-2'

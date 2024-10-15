@@ -57,14 +57,14 @@ def _get_report_file_copy_query(table_name: str, database: str) -> str:
     return query
 
 
-@asset(deps=["s3_file_report_stage"], required_resource_keys={"snowflake", "env_config"})
+@asset(deps=[s3_file_report_stage], required_resource_keys={"snowflake", "env_config"})
 def finance_report_file(context: AssetExecutionContext) -> None:
     copy_file_query = _get_report_file_copy_query(table_name="finance_report", database=context.resources.env_config.snowflake_database)
     context.resources.snowflake.execute_query(copy_file_query)
     context.log.info("Finance Report File Unloaded Successfully")
 
 
-@asset(deps=["s3_file_report_stage"], required_resource_keys={"snowflake", "env_config"})
+@asset(deps=[s3_file_report_stage], required_resource_keys={"snowflake", "env_config"})
 def marketing_report_file(context: AssetExecutionContext) -> None:
     copy_file_query = _get_report_file_copy_query(table_name="marketing_report", database=context.resources.env_config.snowflake_database)
     context.resources.snowflake.execute_query(copy_file_query)

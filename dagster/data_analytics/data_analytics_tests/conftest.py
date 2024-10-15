@@ -1,3 +1,4 @@
+import os
 from unittest.mock import MagicMock
 
 import pytest
@@ -16,10 +17,11 @@ def fake_op_context(fake_resources):
 
 @pytest.fixture
 def fake_resources():
-    env_config = ENV_CONFIGS["dev"]
+    env = os.environ.get("ENV")
+    env_config = ENV_CONFIGS[env]
     dbt_dev_resource = DbtCliResource(
         project_dir=dbt_project,
-        target="dev",
+        target=env,
     )
     snowflake = SnowflakeResource(
         account=env_config.snowflake_account,

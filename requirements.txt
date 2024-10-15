@@ -8,3 +8,5 @@ dagster-webserver==1.8.11
 dagster-dbt==0.24.11
 dagster_snowflake==0.24.11
 dagster-slack==0.24.11
+fastparquet==2024.5.0
+pyarrow==17.0.0

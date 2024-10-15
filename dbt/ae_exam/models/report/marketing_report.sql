@@ -1,13 +1,15 @@
 WITH _marketing_report AS (
-    SELECT fe.transaction_id,
-           dc.customer_country,
-           transaction_date
+    SELECT
+        fe.transaction_id,
+        dc.customer_country,
+        transaction_date
     FROM {{ ref("fact_events") }} AS fe
-    JOIN {{ ref("dim_customers") }} AS dc ON dc.id = fe.customer_id
+    INNER JOIN {{ ref("dim_customers") }} AS dc ON fe.customer_id = dc.id
 )
 
-SELECT CUSTOMER_COUNTRY,
-       COUNT(transaction_id) AS TOTAL_TRANSACTIONS
+SELECT
+    customer_country,
+    COUNT(transaction_id) AS total_transactions
 FROM _marketing_report
-WHERE TRANSACTION_DATE BETWEEN DATE_TRUNC(month, CURRENT_DATE()) AND LAST_DAY(CURRENT_DATE())
-GROUP BY CUSTOMER_COUNTRY
+WHERE transaction_date BETWEEN DATE_TRUNC(MONTH, CURRENT_DATE()) AND LAST_DAY(CURRENT_DATE())
+GROUP BY customer_country

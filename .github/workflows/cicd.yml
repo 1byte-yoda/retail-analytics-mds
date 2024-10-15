@@ -55,7 +55,7 @@ jobs:
           tfsec --version
 
       - name: 'Terraform Init'
-        run: terraform init
+        run: TF_TOKEN_app_terraform_io=${{ secrets.TERRAFORM_TOKEN }} terraform init
         working-directory: ${{ env.WORKING_DIR }}
 
       - name: 'Terraform Format'
@@ -79,12 +79,12 @@ jobs:
       - name: 'Terraform Plan'
         run: |
           ls
-          terraform plan -out=tfplan
+          TF_TOKEN_app_terraform_io=${{ secrets.TERRAFORM_TOKEN }} terraform plan -out=tfplan
         working-directory: ${{ env.WORKING_DIR }}
 
       - name: 'Terraform Apply'
         if: github.ref == 'refs/heads/master'
-        run: terraform apply -auto-approve tfplan
+        run: TF_TOKEN_app_terraform_io=${{ secrets.TERRAFORM_TOKEN }} terraform apply -auto-approve tfplan
         working-directory: ${{ env.WORKING_DIR }}
 
   test:

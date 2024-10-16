@@ -39,7 +39,7 @@ Would you change the current state of the repository or not? If you decide to do
 Before doing anything else, in `config.py`, rename the `folder_alias` variable to your `LASTNAME_initials` (ex. `DELACRUZ_J`, `SMITH_S`)
 
 # Solution
-
+![erd](docs/images/architecture.png)
 <hr>
 
 # Prerequisites

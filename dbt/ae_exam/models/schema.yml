@@ -3,6 +3,7 @@ version: 2
 models:
   - name: raw_events
     description: "Raw Data Source of Platform Events data"
+
   - name: fact_events
     description: "Fact Table containing platform events of product transactions"
     columns:
@@ -21,10 +22,13 @@ models:
         tests:
           - positive_value
           - not_null
-      - name: product_name
-        description: "The name of the product."
+      - name: product_id
+        description: "The id of the product."
         tests:
           - not_null
+          - relationships:
+              to: ref('dim_products')
+              field: id
       - name: transaction_date
         description: "The date when the transaction occurred. In YYYY-mm-dd format"
         tests:

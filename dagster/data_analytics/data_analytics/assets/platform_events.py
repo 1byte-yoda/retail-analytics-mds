@@ -12,7 +12,7 @@ def events_table(context: AssetExecutionContext) -> None:
     column_definition = ",\n".join(f"{column_name} {column_type}" for column_name, column_type in env_config.datatypes.items())
     today = datetime.datetime.now().strftime("%Y-%m-%d")
 
-    create_table_sql = f"CREATE TABLE IF NOT EXISTS table_name ({column_definition})"
+    create_table_sql = f"CREATE TABLE IF NOT EXISTS {table_name} ({column_definition})"
     create_stage_sql = f"""
         CREATE OR REPLACE STAGE {stage_name}
         URL='s3://{env_config.bucket_name}/{env_config.data_folder}/{today}/'

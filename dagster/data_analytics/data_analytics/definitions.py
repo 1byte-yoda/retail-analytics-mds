@@ -33,7 +33,7 @@ dbt_dev_resource = DbtCliResource(
 
 indebted_ae_schedule = ScheduleDefinition(
     job=indebted_ae_exam_job,
-    cron_schedule="0 1 * * *", # every 1am UTC daily
+    cron_schedule="0 1 * * *",  # every 1am UTC daily
 )
 
 defs = Definitions(
@@ -41,5 +41,5 @@ defs = Definitions(
     resources={"snowflake": snowflake, "dbt": dbt_dev_resource, "env_config": env_config},
     jobs=[indebted_ae_exam_job],
     sensors=[make_slack_on_failure_sensor(env_config=env_config)],
-    schedules=[indebted_ae_schedule]
+    schedules=[indebted_ae_schedule],
 )

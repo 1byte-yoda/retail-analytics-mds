@@ -8,7 +8,7 @@ def events_table(context: AssetExecutionContext) -> None:
     """Creates the events table using the platform_transactions.csv via Snowflake Stage"""
     env_config = context.resources.env_config
     table_name = f'"{env_config.snowflake_database}"."{env_config.snowflake_schema}".{env_config.snowflake_table_name}'
-    stage_name = f'{table_name}_stage'
+    stage_name = f"{table_name}_stage"
     column_definition = ",\n".join(f"{column_name} {column_type}" for column_name, column_type in env_config.datatypes.items())
     today = datetime.datetime.now().strftime("%Y-%m-%d")
 

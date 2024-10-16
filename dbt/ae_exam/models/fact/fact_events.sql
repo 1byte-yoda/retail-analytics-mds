@@ -16,10 +16,10 @@ WITH _fact_events AS (
     FROM {{ ref("raw_events") }}
 )
 
-SELECT *
-FROM _fact_events
+SELECT fe.*
+FROM _fact_events AS fe
 WHERE
     1 != 0
     {% if is_incremental() %}
-        AND transaction_date > (SELECT MAX(t.transaction_id) AS max_id FROM {{ this }} AS t)
+        AND fe.transaction_id > (SELECT MAX(t.transaction_id) AS max_id FROM {{ this }} AS t)
     {% endif %}

@@ -23,10 +23,12 @@ def ae_exam_dbt_assets(
     context: AssetExecutionContext,
 ):
     if context.resources.env_config.env == "dev":
-        args = ["build", "--profiles-dir", "~/.dbt"]
+        profiles_arg = ["--profiles-dir", "~/.dbt"]
+        args = (["compile", *profiles_arg], ["build", *profiles_arg])
     else:
-        args = ["build"]
-    yield from context.resources.dbt.cli(args, context=context).stream()
+        args = (["compile"], ["build"])
+    yield from context.resources.dbt.cli(args[0], context=context).stream()
+    yield from context.resources.dbt.cli(args[1], context=context).stream()
 
 
 @asset(deps=["finance_report", "marketing_report"], required_resource_keys={"snowflake", "env_config"})

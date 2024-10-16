@@ -43,6 +43,10 @@ models:
           - relationships:
               to: ref('dim_client_info')
               field: id
+      - name: insertion_timestamp
+        description: "The timestamp when the ETL Job Inserted a record. System Generated UTC Timezone"
+        tests:
+          - not_null
 
   - name: dim_client_info
     description: "Dimension table containing the client's info"
@@ -54,6 +58,10 @@ models:
           - not_null
       - name: client_country
         description: "The country where the client resides"
+        tests:
+          - not_null
+      - name: insertion_timestamp
+        description: "The timestamp when the ETL Job Inserted a record. System Generated UTC Timezone"
         tests:
           - not_null
 
@@ -94,6 +102,11 @@ models:
         description: "The country where the customer resides"
         tests:
           - not_null
+      - name: insertion_timestamp
+        description: "The timestamp when the ETL Job Inserted a record. System Generated UTC Timezone"
+        tests:
+          - not_null
+
   - name: finance_report
     description: "Data Mart Report for Finance Team"
     columns:
@@ -106,6 +119,7 @@ models:
         type: string
         tests:
           - not_null
+
   - name: marketing_report
     description: "Data Mart Report for Marketing Team"
     columns:

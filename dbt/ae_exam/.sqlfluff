@@ -9,6 +9,7 @@ exclude_rules = RF04
 
 [sqlfluff:indentation]
 tab_space_size = 4
+
 [sqlfluff:layout:type:comma]
 spacing_before = touch
 line_position = trailing

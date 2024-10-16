@@ -31,6 +31,7 @@ def ae_exam_dbt_assets(
 
 @asset(deps=["finance_report", "marketing_report"], required_resource_keys={"snowflake", "env_config"})
 def s3_file_report_stage(context: AssetExecutionContext) -> None:
+    """Snowflake Stage Object for S3 Report Dumps"""
     env_config = context.resources.env_config
     schema = "REPORT"
     s3_bucket = f"'s3://{env_config.bucket_name}/{env_config.reports_folder}/{env_config.folder_alias}/'"
@@ -59,6 +60,7 @@ def _get_report_file_copy_query(table_name: str, database: str) -> str:
 
 @asset(deps=[s3_file_report_stage], required_resource_keys={"snowflake", "env_config"})
 def finance_report_file(context: AssetExecutionContext) -> None:
+    """Data Mart Report for Finance Team in Parquet File Format"""
     copy_file_query = _get_report_file_copy_query(table_name="finance_report", database=context.resources.env_config.snowflake_database)
     context.resources.snowflake.execute_query(copy_file_query)
     context.log.info("Finance Report File Unloaded Successfully")
@@ -66,6 +68,7 @@ def finance_report_file(context: AssetExecutionContext) -> None:
 
 @asset(deps=[s3_file_report_stage], required_resource_keys={"snowflake", "env_config"})
 def marketing_report_file(context: AssetExecutionContext) -> None:
+    """Data Mart Report for Marketing Team in Parquet File Format"""
     copy_file_query = _get_report_file_copy_query(table_name="marketing_report", database=context.resources.env_config.snowflake_database)
     context.resources.snowflake.execute_query(copy_file_query)
     context.log.info("Marketing Report File Unloaded Successfully")

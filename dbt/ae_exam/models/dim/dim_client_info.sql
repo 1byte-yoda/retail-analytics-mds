@@ -5,7 +5,7 @@ WITH _dim_client_info AS (
 
 SELECT
     {{ dbt_utils.generate_surrogate_key(['client_country']) }} AS id,
-    {{ standardized_null_value('client_country') }} AS client_country,
-    CURRENT_TIMESTAMP() AS insertion_timestamp
+    {{ standardized_null_value('client_country') }} AS client_country
+    ,CURRENT_TIMESTAMP() AS insertion_timestamp
 FROM _dim_client_info
 WHERE 1 != 0

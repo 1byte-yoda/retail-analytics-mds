@@ -11,8 +11,8 @@ exclude_rules = RF04
 tab_space_size = 4
 
 [sqlfluff:layout:type:comma]
-spacing_before = touch
-line_position = trailing
+spacing_after = touch
+line_position = leading
 
 [sqlfluff:rules:capitalisation.keywords]
 capitalisation_policy = upper

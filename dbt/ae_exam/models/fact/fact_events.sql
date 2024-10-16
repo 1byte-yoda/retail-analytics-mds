@@ -5,14 +5,14 @@
 
 WITH _fact_events AS (
     SELECT
-        transaction_id,
-        purchase_price,
-        product_value,
-        product_name,
+        transaction_id
+        ,purchase_price
+        ,product_value
+        ,product_name,
         {{ proxy_date_field('TRANSACTION_DATE') }},
-        {{ dbt_utils.generate_surrogate_key(['first_name', 'last_name', 'email']) }} AS customer_id,
-        {{ dbt_utils.generate_surrogate_key(['client_country']) }} AS client_info_id,
-        CURRENT_TIMESTAMP() AS insertion_timestamp
+        {{ dbt_utils.generate_surrogate_key(['first_name', 'last_name', 'email']) }} AS customer_id
+        ,{{ dbt_utils.generate_surrogate_key(['client_country']) }} AS client_info_id
+        ,CURRENT_TIMESTAMP() AS insertion_timestamp
     FROM {{ ref("raw_events") }}
 )
 

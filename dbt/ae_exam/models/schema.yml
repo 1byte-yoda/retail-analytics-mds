@@ -69,6 +69,23 @@ models:
         tests:
           - not_null
 
+  - name: dim_products
+    description: "Dimension table containing the product's info"
+    columns:
+      - name: id
+        description: "Unique identifier of each product"
+        tests:
+          - unique
+          - not_null
+      - name: product_name
+        description: "The name of the product"
+        tests:
+          - not_null
+      - name: insertion_timestamp
+        description: "The timestamp when the ETL Job Inserted a record. System Generated UTC Timezone"
+        tests:
+          - not_null
+
   - name: dim_customers
     description: "Dimension table containing the customer's info in the platform"
     columns:

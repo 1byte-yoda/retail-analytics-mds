@@ -11,11 +11,12 @@ def events_table(context: AssetExecutionContext) -> None:
     stage_name = f"{table_name}_stage"
     column_definition = ",\n".join(f"{column_name} {column_type}" for column_name, column_type in env_config.datatypes.items())
     today = datetime.datetime.now().strftime("%Y-%m-%d")
+    s3_path = f"'s3://{env_config.bucket_name}/{env_config.data_folder}/{today}/'"
 
-    create_table_sql = f"CREATE TABLE IF NOT EXISTS {table_name} ({column_definition})"
+    create_table_sql = f"CREATE OR REPLACE TABLE {table_name} ({column_definition})"
     create_stage_sql = f"""
         CREATE OR REPLACE STAGE {stage_name}
-        URL='s3://{env_config.bucket_name}/{env_config.data_folder}/{today}/'
+        URL = {s3_path}
         CREDENTIALS=(AWS_KEY_ID='{env_config.aws_key_id}' AWS_SECRET_KEY='{env_config.aws_secret_key}');
     """
     copy_file_sql = f"""
@@ -30,6 +31,5 @@ def events_table(context: AssetExecutionContext) -> None:
         cursor.execute(create_stage_sql)
         cursor.execute(copy_file_sql)
         conn.commit()
-
     context.log.info(f"{table_name} was populated successfully")
     return

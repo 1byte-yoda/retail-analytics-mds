@@ -37,6 +37,8 @@ def test_events_table_asset(fake_asset_context):
                 AND TABLE_CATALOG = '{conn.database}'
         """
         check_table_populated_query = f'SELECT COUNT(1) FROM "{conn.database}"."{conn.schema}".EVENTS'
+        print(check_table_exist_query)
+        print(check_table_populated_query)
         check_table_rows = conn.cursor().execute(check_table_exist_query).fetchall()
         events_table_rows = conn.cursor().execute(check_table_populated_query).fetchall()
         assert len(check_table_rows) == 1

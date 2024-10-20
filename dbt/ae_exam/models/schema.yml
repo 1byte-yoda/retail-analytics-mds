@@ -130,6 +130,8 @@ models:
 
   - name: finance_report
     description: "Data Mart Report for Finance Team"
+    tests:
+        - table_not_empty
     columns:
       - name: total_value
         type: float
@@ -143,6 +145,8 @@ models:
 
   - name: marketing_report
     description: "Data Mart Report for Marketing Team"
+    tests:
+      - table_not_empty
     columns:
       - name: total_transactions
         type: float

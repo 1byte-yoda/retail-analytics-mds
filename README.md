@@ -202,6 +202,7 @@ python scripts/create_secrets.py stage
 # Prod Environment Configuration
 python scripts/create_secrets.py prod
 ```
+2. Running the code snippet above will create a .env file in your local machine which will store the dev configurations. For stage and prod, it will create entries in AWS Secret Manager.
 
 ## Local Development Commands
 1. Running **Pytest Tests**

@@ -45,6 +45,11 @@ def test_events_table_asset(fake_asset_context):
         assert events_table_rows[0][0] > 0
 
 
+def test_ae_exam_dbt(fake_resources):
+    result = materialize(assets=[ae_exam_dbt_assets], resources=fake_resources)
+    assert result.success
+
+
 def test_finance_report_file(fake_asset_context):
     finance_report_file(context=fake_asset_context)
     env_config = fake_asset_context.resources.env_config
@@ -56,11 +61,11 @@ def test_finance_report_file(fake_asset_context):
     df = pd.read_parquet(io.BytesIO(response["Body"].read()))
     expected_df = pd.DataFrame.from_dict(
         {
-            "CUSTOMER_COUNTRY": ["Brazil", "Philippines", "United States", "Not Available", "Australia"],
-            "TOTAL_VALUE": [4512.82, 5644.28, 2603.88, 1733.4, 36.07],
+            "CUSTOMER_COUNTRY": ["Australia", "Brazil", "Not Available", "Philippines", "United States"],
+            "TOTAL_VALUE": [36.07, 4512.82, 1733.4, 5644.28, 2603.88],
         }
     )
-    assert_frame_equal(df, expected_df)
+    assert_frame_equal(df.sort_values(by="CUSTOMER_COUNTRY", ignore_index=True), expected_df)
 
 
 def test_marketing_report_file(fake_asset_context):
@@ -74,13 +79,11 @@ def test_marketing_report_file(fake_asset_context):
     df = pd.read_parquet(io.BytesIO(response["Body"].read()))
     expected_df = pd.DataFrame.from_dict(
         {
-            "CUSTOMER_COUNTRY": ["Brazil", "Philippines", "United States", "Australia", "Not Available"],
-            "TOTAL_TRANSACTIONS": [Decimal("314"), Decimal("382"), Decimal("179"), Decimal("2"), Decimal("123")],
+            "CUSTOMER_COUNTRY": ["Australia", "Brazil", "Not Available", "Philippines", "United States"],
+            "TOTAL_TRANSACTIONS": [Decimal("2"), Decimal("314"), Decimal("123"), Decimal("382"), Decimal("179")],
         }
     )
-    assert_frame_equal(df, expected_df)
-
-
-def test_ae_exam_dbt(fake_resources):
-    result = materialize(assets=[ae_exam_dbt_assets], resources=fake_resources)
-    assert result.success
+    assert_frame_equal(
+        df.sort_values(by="CUSTOMER_COUNTRY", ignore_index=True),
+        expected_df,
+    )

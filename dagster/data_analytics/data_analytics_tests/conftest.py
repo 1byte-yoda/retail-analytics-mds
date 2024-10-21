@@ -88,7 +88,6 @@ def _drop_dimensional_tables(fake_resources: dict):
     with fake_resources.get("snowflake").get_connection() as conn:
         cursor = conn.cursor()
         cursor.execute("DROP TABLE PLATFORM_STAGE.RAW.EVENTS;")
-        cursor.execute("DROP TABLE PLATFORM_STAGE.RAW.RAW_EVENTS;")
         cursor.execute("DROP TABLE PLATFORM_STAGE.DIM.DIM_CUSTOMERS;")
         cursor.execute("DROP TABLE PLATFORM_STAGE.DIM.DIM_CLIENT_INFO;")
         cursor.execute("DROP TABLE PLATFORM_STAGE.DIM.DIM_PRODUCTS;")

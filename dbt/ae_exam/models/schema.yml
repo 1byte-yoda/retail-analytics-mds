@@ -3,7 +3,8 @@ version: 2
 models:
   - name: raw_events
     description: "Raw Data Source of Platform Events data"
-
+    tests:
+      - table_not_empty
   - name: fact_events
     description: "Fact Table containing platform events of product transactions"
     columns:
@@ -47,6 +48,10 @@ models:
           - relationships:
               to: ref('dim_client_info')
               field: id
+      - name: customer_country
+        description: "The country where the customer resides"
+        tests:
+          - not_null
       - name: insertion_timestamp
         description: "The timestamp when the ETL Job Inserted a record. System Generated UTC Timezone"
         tests:
@@ -119,14 +124,6 @@ models:
                 "Female",
                 "Others"
               ]
-      - name: customer_country
-        description: "The country where the customer resides"
-        tests:
-          - not_null
-      - name: insertion_timestamp
-        description: "The timestamp when the ETL Job Inserted a record. System Generated UTC Timezone"
-        tests:
-          - not_null
 
   - name: finance_report
     description: "Data Mart Report for Finance Team"

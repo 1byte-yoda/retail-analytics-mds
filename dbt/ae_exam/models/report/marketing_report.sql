@@ -1,7 +1,7 @@
 WITH _marketing_report AS (
     SELECT
         fe.transaction_id
-        ,dc.customer_country
+        ,fe.customer_country
         ,fe.transaction_date
     FROM {{ ref("fact_events") }} AS fe
     INNER JOIN {{ ref("dim_customers") }} AS dc ON fe.customer_id = dc.id

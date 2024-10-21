@@ -4,7 +4,6 @@ WITH _dim_customers AS (
         ,last_name
         ,email
         ,gender
-        ,customer_country
     FROM {{ ref("raw_events") }}
 )
 
@@ -17,7 +16,6 @@ SELECT
         WHEN {{ standardized_null_value('gender') }} NOT IN ('Male','Female') THEN 'Others'
         ELSE {{ standardized_null_value('gender') }}
     END AS gender
-    ,{{ standardized_null_value('customer_country') }} AS customer_country
     ,CURRENT_TIMESTAMP() AS insertion_timestamp
 FROM _dim_customers
 WHERE

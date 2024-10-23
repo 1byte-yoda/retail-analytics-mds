@@ -1,4 +1,4 @@
-[![BuildStatus](https://github.com/1byte-yoda/ae-tech-assessment/actions/workflows/cicd.yml/badge.svg)](https://github.com/1byte-yoda/ae-tech-assessment)
+[![BuildStatus](https://github.com/1byte-yoda/retail-analytics-mds/actions/workflows/cicd.yml/badge.svg)](https://github.com/1byte-yoda/retail-analytics-mds)
 [![codecov][code-cov-shield]][code-cov-url]
 [![linter](https://img.shields.io/badge/linter-flake8-blue)](https://github.com/PyCQA/flake8)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
@@ -15,7 +15,7 @@
 # Prerequisites
 ### Cloning the Project Repository
 ```commandline
-git clone https://github.com/1byte-yoda/ae-tech-assessment.git
+https://github.com/1byte-yoda/retail-analytics-mds.git
 ```
 
 ### Installing Python and the Required Modules for this project

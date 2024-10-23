@@ -25,11 +25,11 @@ jobs:
 
       - name: 'Install DBT Dependencies'
         run: dbt deps
-        working-directory: dbt/ae_exam
+        working-directory: dbt/data_analytics
 
       - name: 'Beautify SQL Code'
         run: DBT_SNOWFLAKE_ACCOUNT_DEV=${{ secrets.DBT_SNOWFLAKE_ACCOUNT_STAGE }} DBT_SNOWFLAKE_PASSWORD_DEV=${{ secrets.DBT_SNOWFLAKE_PASSWORD_STAGE }} sqlfluff fix .
-        working-directory: dbt/ae_exam
+        working-directory: dbt/data_analytics
 
   terraform:
     name: 'Terraform Lint, Security Check, and Deploy'
@@ -137,30 +137,30 @@ jobs:
 
       - name: 'Run dbt debug for staging environment'
         run: DBT_SNOWFLAKE_ACCOUNT_STAGE=${{ secrets.DBT_SNOWFLAKE_ACCOUNT_STAGE }} DBT_SNOWFLAKE_PASSWORD_STAGE=${{ secrets.DBT_SNOWFLAKE_PASSWORD_STAGE }} dbt debug --target stage
-        working-directory: dbt/ae_exam
+        working-directory: dbt/data_analytics
 
       - name: 'Run dbt debug for prod environment'
         run: DBT_SNOWFLAKE_ACCOUNT_PROD=${{ secrets.DBT_SNOWFLAKE_ACCOUNT_PROD }} DBT_SNOWFLAKE_PASSWORD_PROD=${{ secrets.DBT_SNOWFLAKE_PASSWORD_PROD }} dbt debug --target prod
-        working-directory: dbt/ae_exam
+        working-directory: dbt/data_analytics
         if: github.ref == 'refs/heads/master'
 
       - name: 'Run dbt deps for staging environment'
         run: DBT_SNOWFLAKE_ACCOUNT_STAGE=${{ secrets.DBT_SNOWFLAKE_ACCOUNT_STAGE }} DBT_SNOWFLAKE_PASSWORD_STAGE=${{ secrets.DBT_SNOWFLAKE_PASSWORD_STAGE }} dbt deps --target stage
-        working-directory: dbt/ae_exam
+        working-directory: dbt/data_analytics
 
       - name: 'Run dbt deps for prod environment'
         run: DBT_SNOWFLAKE_ACCOUNT_PROD=${{ secrets.DBT_SNOWFLAKE_ACCOUNT_PROD }} DBT_SNOWFLAKE_PASSWORD_PROD=${{ secrets.DBT_SNOWFLAKE_PASSWORD_PROD }} dbt deps --target prod
-        working-directory: dbt/ae_exam
+        working-directory: dbt/data_analytics
         if: github.ref == 'refs/heads/master'
 
       - name: 'Run dbt compile prod'
         run: DBT_SNOWFLAKE_ACCOUNT_PROD=${{ secrets.DBT_SNOWFLAKE_ACCOUNT_PROD }} DBT_SNOWFLAKE_PASSWORD_PROD=${{ secrets.DBT_SNOWFLAKE_PASSWORD_PROD }} dbt compile --target prod
-        working-directory: dbt/ae_exam
+        working-directory: dbt/data_analytics
         if: github.ref == 'refs/heads/master'
 
       - name: 'Run dbt compile stage'
         run: DBT_SNOWFLAKE_ACCOUNT_STAGE=${{ secrets.DBT_SNOWFLAKE_ACCOUNT_STAGE }} DBT_SNOWFLAKE_PASSWORD_STAGE=${{ secrets.DBT_SNOWFLAKE_PASSWORD_STAGE }} dbt compile --target stage
-        working-directory: dbt/ae_exam
+        working-directory: dbt/data_analytics
 
       - name: 'Run Pytest with Coverage Report'
         run: |

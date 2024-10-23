@@ -1,4 +1,4 @@
-name: AE_EXAM_CICD
+name: CICD
 
 on:
   push:

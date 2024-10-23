@@ -14,7 +14,7 @@ from ..data_analytics.project import dbt_project, get_project_root
 
 @pytest.fixture(scope="session", autouse=True)
 def setup_and_teardown(fake_resources):
-    bucket_name = "ae-exam-bucket-stage"
+    bucket_name = "mark-data-analytics-bucket-stage"
     _upload_test_file_to_s3(bucket_name=bucket_name)
     yield
     _delete_s3_folder(bucket_name=bucket_name, folder="data/")

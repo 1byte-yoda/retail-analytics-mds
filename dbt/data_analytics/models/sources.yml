@@ -1,7 +1,7 @@
 version: 2
 
 sources:
-  - name: ae_exam
+  - name: data_analytics
     schema: raw
     tables:
       - name: events

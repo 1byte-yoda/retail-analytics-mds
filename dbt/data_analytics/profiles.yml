@@ -1,4 +1,4 @@
-ae_exam:
+data_analytics:
   outputs:
     dev:
       account: "{{ env_var('DBT_SNOWFLAKE_ACCOUNT_DEV', 'N/A') }}"

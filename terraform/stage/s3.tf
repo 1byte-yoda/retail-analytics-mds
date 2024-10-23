@@ -2,16 +2,16 @@
 #tfsec:ignore:aws-s3-enable-versioning
 #tfsec:ignore:aws-s3-encryption-customer-key
 #tfsec:ignore:aws-s3-enable-bucket-encryption
-resource "aws_s3_bucket" "s3_ae_exam_bucket" {
-  bucket = "ae-exam-bucket-${var.env}"
+resource "aws_s3_bucket" "s3_data_analytics_bucket" {
+  bucket = "mark-data-analytics-bucket-${var.env}"
 }
 
 #tfsec:ignore:aws-s3-block-public-acls
 #tfsec:ignore:aws-s3-no-public-buckets
 #tfsec:ignore:aws-s3-block-public-policy
 #tfsec:ignore:aws-s3-ignore-public-acls
-resource "aws_s3_bucket_public_access_block" "s3_ae_exam_bucket" {
-  bucket = aws_s3_bucket.s3_ae_exam_bucket.id
+resource "aws_s3_bucket_public_access_block" "s3_data_analytics_bucket" {
+  bucket = aws_s3_bucket.s3_data_analytics_bucket.id
 
   block_public_acls       = false
   block_public_policy     = false
@@ -20,7 +20,7 @@ resource "aws_s3_bucket_public_access_block" "s3_ae_exam_bucket" {
 }
 
 resource "aws_s3_bucket_policy" "policy" {
-  bucket = aws_s3_bucket.s3_ae_exam_bucket.id
+  bucket = aws_s3_bucket.s3_data_analytics_bucket.id
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -30,13 +30,13 @@ resource "aws_s3_bucket_policy" "policy" {
         Effect    = "Allow"
         Principal = "*"
         Action    = "s3:GetObject"
-        Resource  = "${aws_s3_bucket.s3_ae_exam_bucket.arn}/*"
+        Resource  = "${aws_s3_bucket.s3_data_analytics_bucket.arn}/*"
       }
     ]
   })
 
   depends_on = [
-    aws_s3_bucket.s3_ae_exam_bucket,
-    aws_s3_bucket_public_access_block.s3_ae_exam_bucket
+    aws_s3_bucket.s3_data_analytics_bucket,
+    aws_s3_bucket_public_access_block.s3_data_analytics_bucket
   ]
 }

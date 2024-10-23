@@ -8,7 +8,7 @@ from dagster import materialize
 from pandas.testing import assert_frame_equal
 
 from ..data_analytics.assets.platform_events import events_table
-from ..data_analytics.assets.ae_exam import s3_file_report_stage, finance_report_file, marketing_report_file, ae_exam_dbt_assets
+from ..data_analytics.assets.data_analytics import s3_file_report_stage, finance_report_file, marketing_report_file, data_analytics_dbt_assets
 
 
 def test_s3_file_report_stage(fake_asset_context):
@@ -45,8 +45,8 @@ def test_events_table_asset(fake_asset_context):
         assert events_table_rows[0][0] > 0
 
 
-def test_ae_exam_dbt(fake_resources):
-    result = materialize(assets=[ae_exam_dbt_assets], resources=fake_resources)
+def test_data_analytics_dbt(fake_resources):
+    result = materialize(assets=[data_analytics_dbt_assets], resources=fake_resources)
     assert result.success
 
 

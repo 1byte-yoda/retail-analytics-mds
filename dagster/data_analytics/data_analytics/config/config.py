@@ -50,7 +50,7 @@ class ProdConfig(BaseConfig):
         self.snowflake_database = "PLATFORM_PROD"
         self.snowflake_schema = "RAW"
         self.snowflake_wh = "EXAM_WH_PROD"
-        self.bucket_name = "ae-exam-bucket-prod"
+        self.bucket_name = "mark-data-analytics-bucket-prod"
         self.aws_key_id = secrets.get("aws-key-id")
         self.aws_secret_key = secrets.get("aws-secret-key")
         self.snowflake_role = "TRANSFORM_PROD"
@@ -68,7 +68,7 @@ class StageConfig(BaseConfig):
         self.snowflake_database = "PLATFORM_STAGE"
         self.snowflake_schema = "RAW"
         self.snowflake_wh = "EXAM_WH_STAGE"
-        self.bucket_name = "ae-exam-bucket-stage"
+        self.bucket_name = "mark-data-analytics-bucket-stage"
         self.aws_key_id = secrets.get("aws-key-id")
         self.aws_secret_key = secrets.get("aws-secret-key")
         self.snowflake_role = "TRANSFORM_STAGE"
@@ -86,7 +86,7 @@ class DevConfig(BaseConfig):
         self.snowflake_database = "PLATFORM_DEV"
         self.snowflake_schema = "RAW"
         self.snowflake_wh = "EXAM_WH_DEV"
-        self.bucket_name = "ae-exam-bucket-dev"
+        self.bucket_name = "mark-data-analytics-bucket-dev"
         self.aws_key_id = secrets.get("AWS_KEY_ID")
         self.aws_secret_key = secrets.get("AWS_SECRET_KEY")
         self.snowflake_role = "TRANSFORM_DEV"

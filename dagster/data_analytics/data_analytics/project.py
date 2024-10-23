@@ -11,7 +11,7 @@ def get_project_root():
     return None
 
 
-DBT_PROJECT_DIR = get_project_root() / "dbt" / "ae_exam"
+DBT_PROJECT_DIR = get_project_root() / "dbt" / "data_analytics"
 
 dbt_project = DbtProject(
     project_dir=DBT_PROJECT_DIR,

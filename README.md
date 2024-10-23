@@ -3,41 +3,6 @@
 [![linter](https://img.shields.io/badge/linter-flake8-blue)](https://github.com/PyCQA/flake8)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-# Problem Statement
-You just started working for a company that sells products for a couple of countries in the world.
-
-The Data Engineering team set up a process where you will receive a file into an s3 bucket on a daily basis. (An example of the last one is available under the ```data/``` folder).
-
-On AWS S3, the file will be under the following folder:
-
-```data/platform_transactions.csv```
-
-After transformation, the files will be loaded into the S3 buckets `reports` folder.
-
-This repository should contain a framework to:
-
-- Grab the data from an s3 bucket
-- Clean/transform the data
-- Ingest into a Data Lake
-- Create 2 reports
-  - Total value of transactions and send to the Finance Team (```reports/``` folder inside the AWS S3 bucket)
-  - Total number of transactions and sent to the Marketing Team (```reports/``` folder inside the AWS S3 bucket)
-
-Details:
-
-- Our Data Lake details are set up in the config folder (There are 3 environments, dev, stage and prod, but only prod is on the script)
-- The Data Lake only contains 1 database, 1 schema, and 1 table inside it. All are defined inside the config folder too.
-- At the moment, only 2 reports are created, one for the Finance Team and another one for the Marketing Team
-
-You arrive on your first day at the job and see this repository. In the current state, the scripts work, it can manage all tasks required.
-But there are new clients and products that will be added to the company soon, and more teams will request new reports, what would you do?
-
-Would you change the current state of the repository or not? If you decide to do some changes, fork this repo and share with us!
-
-----
-**IMPORTANT**: <br>
-Before doing anything else, in `config.py`, rename the `folder_alias` variable to your `LASTNAME_initials` (ex. `DELACRUZ_J`, `SMITH_S`)
-
 # Solution
 ![architecture](docs/images/architecture.png)
 
@@ -73,7 +38,7 @@ pip install black==24.10.0 \
 ```
 4. Install **DBT Dependencies**
 ```commandline
-cd dbt/ae_exam
+cd dbt/data_analytics
 dbt deps
 ```
 4. Install **TFLint** by following the instructions [here](https://github.com/terraform-linters/tflint?tab=readme-ov-file#installation)
@@ -245,16 +210,16 @@ black -l 150 dagster/data_analytics
 flake8 dagster/data_analytics
 
 # SQLFluff Lint
-cd dbt/ae_exam
+cd dbt/data_analytics
 DBT_SNOWFLAKE_ACCOUNT_DEV=<YOUR_SNOWFLAKE_PASSWORD> DBT_SNOWFLAKE_PASSWORD_DEV=<YOUR_SNOWFLAKE_PASSWORD> sqlfluff lint .
 
 # Beautify SQL
-cd dbt/ae_exam
+cd dbt/data_analytics
 DBT_SNOWFLAKE_ACCOUNT_DEV=<YOUR_SNOWFLAKE_PASSWORD> DBT_SNOWFLAKE_PASSWORD_DEV=<YOUR_SNOWFLAKE_PASSWORD> sqlfluff fix .
 ```
 4. Running **DBT Commands**
 ```commandline
-cd dbt/ae_exam
+cd dbt/data_analytics
 
 # Debug DBT Connection
 DBT_SNOWFLAKE_ACCOUNT_STAGE=<YOUR_SNOWFLAKE_ACCOUNT_ID> DBT_SNOWFLAKE_PASSWORD_STAGE=<YOUR_SNOWFLAKE_PASSWORD> dbt debug --target dev
@@ -275,10 +240,10 @@ DBT_SNOWFLAKE_ACCOUNT_STAGE=<YOUR_SNOWFLAKE_ACCOUNT_ID> DBT_SNOWFLAKE_PASSWORD_S
 cd dagster/data_analytics
 dagster-webserver
 ```
-2. Go to your browser and open http://127.0.0.1:3000/locations/data_analytics/jobs/indebted_ae_exam_job/
-3. To run the job, upload the `data/data_platform_transactions.csv` file into `s3://ae-exam-bucket-dev/data/{DATE_TODAY}/`
+2. Go to your browser and open http://127.0.0.1:3000/locations/data_analytics/jobs/indebted_data_analytics_job/
+3. To run the job, upload the `data/data_platform_transactions.csv` file into `s3://mark-data-analytics-bucket-dev/data/{DATE_TODAY}/`
 
-![erd](docs/images/indebted_ae_exam_job.svg)
+![erd](docs/images/indebted_data_analytics_job.svg)
 
 
 [code-cov-shield]: https://codecov.io/gh/1byte-yoda/ae-tech-assessment/branch/master/graph/badge.svg?token=ZQ23COSI3V
